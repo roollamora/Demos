@@ -1,0 +1,120 @@
+Task_ID,Task_Name,Milestone,Week_Start,Week_End,Duration_Days,Agent_Vector,Critical_Path,Dependencies,Estimated_Hours,Parallel_Group,Status
+1.1.1,Repository Setup,Foundation & Setup,1,1,0.5,DEV,Yes,,4,A,Not Started
+1.1.2,Development Environment Configuration,Foundation & Setup,1,1,0.75,DEV,Yes,1.1.1,6,A,Not Started
+1.1.3,CI/CD Pipeline Setup,Foundation & Setup,1,1,1,DEVOPS,Yes,1.1.2,8,B,Not Started
+1.1.4,Project Documentation Structure,Foundation & Setup,1,1,0.5,ARCH,No,1.1.1,4,A,Not Started
+1.2.1,Platform Evaluation,Foundation & Setup,1,1,0.75,ARCH,Yes,1.1.1,6,A,Not Started
+1.2.2,Cryptographic Library Selection,Foundation & Setup,1,2,1,CRYPTO,Yes,1.2.1,8,A,Not Started
+1.2.3,Biometric Library Selection,Foundation & Setup,1,2,0.75,DEV+SEC,No,1.2.1,6,B,Not Started
+1.2.4,Architecture Documentation,Foundation & Setup,2,2,0.75,ARCH,Yes,1.2.2,6,A,Not Started
+1.3.1,VPS Selection and Setup,Foundation & Setup,2,2,0.5,DEVOPS,Yes,1.2.4,4,A,Not Started
+1.3.2,Operating System Hardening,Foundation & Setup,2,2,0.75,DEVOPS,Yes,1.3.1,6,A,Not Started
+1.3.3,Tor Hidden Service Configuration,Foundation & Setup,2,2,1,DEVOPS+SEC,Yes,1.3.2,8,A,Not Started
+1.3.4,Database Setup,Foundation & Setup,2,2,0.75,DEVOPS,Yes,1.3.3,6,A,Not Started
+1.3.5,SSL/TLS Configuration,Foundation & Setup,2,2,0.5,DEVOPS,No,1.3.4,4,B,Not Started
+1.4.1,Repository Forking,Foundation & Setup,2,2,0.25,DEV,Yes,1.2.4,2,C,Not Started
+1.4.2,Local Development Setup,Foundation & Setup,2,2,1,DEV,Yes,1.4.1,8,C,Not Started
+1.4.3,Test Suite Verification,Foundation & Setup,2,2,0.75,QA,No,1.4.2,6,D,Not Started
+1.4.4,Customization Planning,Foundation & Setup,2,2,0.75,ARCH+DEV,Yes,1.4.2,6,C,Not Started
+2.1.1,Persian Language Pack Creation,Platform Customization,3,3,1.5,UX+DEV,Yes,1.4.4,12,A,Not Started
+2.1.2,Custom Theme Development,Platform Customization,3,3,1,UX,No,2.1.1,8,B,Not Started
+2.1.3,UI Simplification,Platform Customization,3,3,1,UX+DEV,Yes,2.1.1,8,A,Not Started
+2.2.1,Registration Form Development,Platform Customization,3,3,1,DEV,Yes,2.1.3,8,A,Not Started
+2.2.2,Email Verification System,Platform Customization,3,4,1,DEV,Yes,2.2.1,8,A,Not Started
+2.2.3,Social Vouching Database Schema,Platform Customization,4,4,0.75,DEV,Yes,2.2.2,6,A,Not Started
+2.2.4,Vouching Request System,Platform Customization,4,4,1.25,DEV,Yes,2.2.3,10,A,Not Started
+2.2.5,Admin Vouching Oversight Panel,Platform Customization,4,4,1,DEV,No,2.2.4,8,B,Not Started
+2.2.6,User Profile Management,Platform Customization,4,4,1,DEV,No,2.2.4,8,B,Not Started
+2.3.1,TOTP Library Integration,Platform Customization,4,4,0.75,DEV,No,2.2.2,6,C,Not Started
+2.3.2,QR Code Generation,Platform Customization,4,4,0.5,DEV,No,2.3.1,4,C,Not Started
+2.3.3,Backup Codes System,Platform Customization,4,4,0.75,DEV,No,2.3.2,6,C,Not Started
+2.3.4,2FA Login Flow,Platform Customization,4,4,0.75,DEV,No,2.3.3,6,C,Not Started
+2.4.1,Face Detection Library Integration,Platform Customization,4,4,1,DEV,Yes,2.2.4,8,A,Not Started
+2.4.2,Liveness Detection Implementation,Platform Customization,4,5,1.5,DEV+SEC,Yes,2.4.1,12,A,Not Started
+2.4.3,Face Embedding Generation,Platform Customization,5,5,1.25,DEV,Yes,2.4.2,10,A,Not Started
+2.4.4,Duplicate Detection System,Platform Customization,5,5,1.5,DEV+SEC,Yes,2.4.3,12,A,Not Started
+2.4.5,Privacy-Preserving Architecture,Platform Customization,5,5,1,SEC+DEV,Yes,2.4.4,8,A,Not Started
+2.4.6,Biometric Signup Flow,Platform Customization,5,5,1.25,DEV+UX,Yes,2.4.5,10,A,Not Started
+3.1.1,Helios System Analysis,Cryptographic Voting,5,5,1,CRYPTO+ARCH,Yes,2.1.3,8,B,Not Started
+3.1.2,API Bridge Design,Cryptographic Voting,5,6,1.25,ARCH,Yes,3.1.1,10,B,Not Started
+3.1.3,Data Flow Mapping,Cryptographic Voting,6,6,1,ARCH,Yes,3.1.2,8,B,Not Started
+3.1.4,Cryptographic Key Management,Cryptographic Voting,6,6,1,CRYPTO,Yes,3.1.3,8,B,Not Started
+3.2.1,Helios Installation,Cryptographic Voting,6,6,1,DEVOPS,Yes,3.1.4,8,B,Not Started
+3.2.2,Helios Containerization,Cryptographic Voting,6,6,0.75,DEVOPS,Yes,3.2.1,6,B,Not Started
+3.2.3,Election Trustee Setup,Cryptographic Voting,6,6,1.25,CRYPTO+DEVOPS,Yes,3.2.2,10,B,Not Started
+3.2.4,ElGamal Parameter Configuration,Cryptographic Voting,6,6,0.75,CRYPTO,Yes,3.2.3,6,B,Not Started
+3.2.5,Test Election Execution,Cryptographic Voting,6,6,1,CRYPTO+QA,Yes,3.2.4,8,B,Not Started
+3.3.1,API Authentication Layer,Cryptographic Voting,6,7,1,DEV,Yes,3.2.5,8,B,Not Started
+3.3.2,Vote Creation Endpoint,Cryptographic Voting,7,7,1.25,DEV,Yes,3.3.1,10,B,Not Started
+3.3.3,Vote Casting Endpoint,Cryptographic Voting,7,7,1.5,DEV,Yes,3.3.2,12,B,Not Started
+3.3.4,Vote Verification Endpoint,Cryptographic Voting,7,7,1,DEV,Yes,3.3.3,8,B,Not Started
+3.3.5,Tallying Trigger Mechanism,Cryptographic Voting,7,7,1,DEV,Yes,3.3.4,8,B,Not Started
+3.3.6,Error Handling and Logging,Cryptographic Voting,7,7,0.75,DEV,Yes,3.3.5,6,B,Not Started
+3.4.1,Vote Creation Interface (Admin),Cryptographic Voting,7,8,1.25,UX+DEV,Yes,3.3.6,10,B,Not Started
+3.4.2,Vote Listing Page,Cryptographic Voting,8,8,0.75,DEV,Yes,3.4.1,6,B,Not Started
+3.4.3,Ballot Interface (User),Cryptographic Voting,8,8,1.5,UX+DEV,Yes,3.4.2,12,B,Not Started
+3.4.4,Vote Verification Page,Cryptographic Voting,8,8,1,DEV,Yes,3.4.3,8,B,Not Started
+3.4.5,Results Dashboard,Cryptographic Voting,8,8,1.25,UX+DEV,Yes,3.4.4,10,B,Not Started
+3.4.6,Mobile Responsive Design,Cryptographic Voting,8,8,0.75,UX,No,3.4.5,6,C,Not Started
+3.5.1,Anonymization Architecture Design,Cryptographic Voting,8,8,1,CRYPTO+ARCH,No,3.4.5,8,C,Not Started
+3.5.2,Identity-Vote Database Separation,Cryptographic Voting,8,8,1.25,DEV,No,3.5.1,10,C,Not Started
+3.5.3,Audit Log Implementation,Cryptographic Voting,8,8,1,DEV,No,3.5.2,8,C,Not Started
+3.5.4,Privacy Policy Documentation,Cryptographic Voting,8,8,0.75,SEC+ARCH,No,3.5.3,6,C,Not Started
+4.1.1,Tor Configuration Optimization,Censorship Resistance,6,6,0.75,DEVOPS,No,1.3.3,6,D,Not Started
+4.1.2,DoS Protection Implementation,Censorship Resistance,6,7,1,DEVOPS+SEC,No,4.1.1,8,D,Not Started
+4.1.3,Tor Browser Compatibility Testing,Censorship Resistance,7,7,0.5,QA,No,4.1.2,4,D,Not Started
+4.1.4,Onion Address Publication,Censorship Resistance,7,7,0.5,DEVOPS,No,4.1.3,4,D,Not Started
+4.2.1,Cloudflare Account Setup,Censorship Resistance,7,7,0.5,DEVOPS,No,4.1.4,4,D,Not Started
+4.2.2,Domain Fronting Configuration,Censorship Resistance,7,7,1.25,DEVOPS,No,4.2.1,10,D,Not Started
+4.2.3,CDN Optimization,Censorship Resistance,7,8,0.75,DEVOPS,No,4.2.2,6,D,Not Started
+4.2.4,Censorship Circumvention Testing,Censorship Resistance,8,8,1,SEC+QA,No,4.2.3,8,D,Not Started
+4.3.1,IPFS Node Installation,Censorship Resistance,7,7,0.75,DEVOPS,No,4.2.2,6,E,Not Started
+4.3.2,Static Asset Upload to IPFS,Censorship Resistance,7,8,1,DEVOPS,No,4.3.1,8,E,Not Started
+4.3.3,IPFS Gateway Configuration,Censorship Resistance,8,8,1,DEVOPS,No,4.3.2,8,E,Not Started
+4.3.4,Platform Integration with IPFS,Censorship Resistance,8,8,1.25,DEV,No,4.3.3,10,E,Not Started
+4.3.5,IPFS Content Pinning Strategy,Censorship Resistance,8,8,0.75,DEVOPS,No,4.3.4,6,E,Not Started
+4.4.1,Censorship Circumvention Tool Research,Censorship Resistance,8,8,0.75,SEC,No,4.2.4,6,F,Not Started
+4.4.2,User Guide Creation (Persian),Censorship Resistance,8,8,1,UX+SEC,No,4.4.1,8,F,Not Started
+4.4.3,User Guide Creation (English),Censorship Resistance,8,8,0.5,UX,No,4.4.2,4,F,Not Started
+5.1.1,OWASP Top 10 Testing,Security & Testing,9,9,1.5,SEC,Yes,3.5.4,12,A,Not Started
+5.1.2,Cryptographic Implementation Review,Security & Testing,9,9,1.25,CRYPTO+SEC,Yes,5.1.1,10,A,Not Started
+5.1.3,Authentication & Authorization Testing,Security & Testing,9,9,1,SEC,Yes,5.1.2,8,A,Not Started
+5.1.4,Information Leakage Testing,Security & Testing,9,9,0.75,SEC,Yes,5.1.3,6,A,Not Started
+5.1.5,Vulnerability Remediation,Security & Testing,9,10,1.5,DEV+SEC,Yes,5.1.4,12,A,Not Started
+5.1.6,Security Audit Report,Security & Testing,10,10,0.75,SEC+ARCH,Yes,5.1.5,6,A,Not Started
+5.2.1,Photo Spoofing Tests,Security & Testing,9,9,1,SEC+QA,No,2.4.6,8,B,Not Started
+5.2.2,Video Spoofing Tests,Security & Testing,9,9,1,SEC+QA,No,5.2.1,8,B,Not Started
+5.2.3,Liveness Detection Effectiveness,Security & Testing,9,10,1,SEC+QA,No,5.2.2,8,B,Not Started
+5.2.4,Duplicate Detection Accuracy,Security & Testing,10,10,1,SEC+QA,No,5.2.3,8,B,Not Started
+5.3.1,Load Testing Environment Setup,Security & Testing,9,9,0.5,QA+DEVOPS,No,3.4.5,4,C,Not Started
+5.3.2,Concurrent User Simulation,Security & Testing,9,10,1,QA,No,5.3.1,8,C,Not Started
+5.3.3,Vote Casting Load Test,Security & Testing,10,10,0.75,QA,No,5.3.2,6,C,Not Started
+5.3.4,Database Query Optimization,Security & Testing,10,10,0.75,DEV+DEVOPS,No,5.3.3,6,C,Not Started
+5.4.1,Test Suite Development,Security & Testing,10,10,1.5,QA+DEV,Yes,5.1.6,12,A,Not Started
+5.4.2,Edge Case Testing,Security & Testing,10,10,1.25,QA,Yes,5.4.1,10,A,Not Started
+5.4.3,Browser Compatibility Testing,Security & Testing,10,10,1,QA,Yes,5.4.2,8,A,Not Started
+5.4.4,Continuous Testing Setup,Security & Testing,10,10,0.75,DEVOPS+QA,No,5.4.3,6,D,Not Started
+5.4.5,Bug Tracking System,Security & Testing,10,10,0.5,QA,No,5.4.4,4,D,Not Started
+6.1.1,User Guide Writing (Persian),Documentation & Launch,11,11,1.5,UX+DEV,Yes,5.4.3,12,A,Not Started
+6.1.2,User Guide Translation (English),Documentation & Launch,11,11,0.75,UX,Yes,6.1.1,6,A,Not Started
+6.1.3,Video Tutorial Creation,Documentation & Launch,11,11,1.25,UX,Yes,6.1.2,10,A,Not Started
+6.1.4,FAQ Development,Documentation & Launch,11,11,0.75,UX+DEV,Yes,6.1.3,6,A,Not Started
+6.2.1,Admin Manual Writing,Documentation & Launch,11,11,1.25,ARCH+DEV,No,6.1.1,10,B,Not Started
+6.2.2,Deployment Guide,Documentation & Launch,11,11,1,DEVOPS,No,6.2.1,8,B,Not Started
+6.2.3,Troubleshooting Guide,Documentation & Launch,11,11,0.75,DEVOPS+DEV,No,6.2.2,6,B,Not Started
+6.2.4,Backup & Recovery Documentation,Documentation & Launch,11,11,0.75,DEVOPS,No,6.2.3,6,B,Not Started
+6.3.1,Privacy Policy Writing,Documentation & Launch,11,11,1,SEC+ARCH,No,5.1.6,8,C,Not Started
+6.3.2,Security Whitepaper,Documentation & Launch,11,11,1.25,CRYPTO+SEC,No,6.3.1,10,C,Not Started
+6.3.3,Threat Model Documentation,Documentation & Launch,11,11,0.75,SEC+ARCH,No,6.3.2,6,C,Not Started
+6.3.4,Transparency Report Template,Documentation & Launch,11,11,0.5,ARCH,No,6.3.3,4,C,Not Started
+6.4.1,Beta Tester Recruitment,Documentation & Launch,11,12,1,ALL,Yes,6.1.4,8,A,Not Started
+6.4.2,Beta Onboarding,Documentation & Launch,12,12,1.25,UX+DEV,Yes,6.4.1,10,A,Not Started
+6.4.3,Test Vote Execution,Documentation & Launch,12,12,1.5,ALL,Yes,6.4.2,12,A,Not Started
+6.4.4,Feedback Collection,Documentation & Launch,12,12,1,UX+QA,Yes,6.4.3,8,A,Not Started
+6.4.5,Bug Fixes & Improvements,Documentation & Launch,12,12,1.5,DEV,Yes,6.4.4,12,A,Not Started
+6.5.1,Production Environment Finalization,Documentation & Launch,12,12,1,DEVOPS,Yes,6.4.5,8,A,Not Started
+6.5.2,Monitoring & Alerting Setup,Documentation & Launch,12,12,1.25,DEVOPS,Yes,6.5.1,10,A,Not Started
+6.5.3,Incident Response Plan,Documentation & Launch,12,12,1,SEC+ARCH+DEVOPS,Yes,6.5.2,8,A,Not Started
+6.5.4,Launch Announcement Preparation,Documentation & Launch,12,12,0.75,UX+ARCH,Yes,6.5.3,6,A,Not Started
+6.5.5,Final Pre-Launch Checklist,Documentation & Launch,12,12,0.75,ALL,Yes,6.5.4,6,A,Not Started
+6.5.6,Launch Execution,Documentation & Launch,12,12,0.5,ALL,Yes,6.5.5,4,A,Not Started

@@ -1,0 +1,670 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WBS Network Graph - Task Dependencies</title>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #1a1a2e;
+            color: #eee;
+            overflow: hidden;
+        }
+        
+        #container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        
+        #graph {
+            width: 100%;
+            height: 100%;
+        }
+        
+        .controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            max-width: 300px;
+        }
+        
+        .controls h2 {
+            margin: 0 0 15px 0;
+            font-size: 18px;
+            color: #667eea;
+        }
+        
+        .control-group {
+            margin-bottom: 15px;
+        }
+        
+        .control-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 12px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .control-group select,
+        .control-group input {
+            width: 100%;
+            padding: 8px;
+            background: #16213e;
+            border: 1px solid #667eea;
+            border-radius: 6px;
+            color: #eee;
+            font-size: 14px;
+        }
+        
+        .legend {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+        }
+        
+        .legend h3 {
+            margin: 0 0 15px 0;
+            font-size: 14px;
+            color: #667eea;
+        }
+        
+        .legend-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+        
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            margin-right: 10px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+        
+        .info-panel {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(26, 26, 46, 0.95);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            max-width: 350px;
+            display: none;
+        }
+        
+        .info-panel.active {
+            display: block;
+        }
+        
+        .info-panel h3 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+            font-size: 16px;
+        }
+        
+        .info-panel .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: none;
+            border: none;
+            color: #aaa;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+            text-align: center;
+        }
+        
+        .info-panel .close-btn:hover {
+            color: #fff;
+        }
+        
+        .info-row {
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+        
+        .info-label {
+            color: #aaa;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 3px;
+        }
+        
+        .info-value {
+            color: #eee;
+        }
+        
+        .critical-badge {
+            display: inline-block;
+            background: #f5576c;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+        }
+        
+        .stats {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(26, 26, 46, 0.95);
+            padding: 15px 20px;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            display: flex;
+            gap: 20px;
+        }
+        
+        .stat-item {
+            text-align: center;
+        }
+        
+        .stat-number {
+            font-size: 24px;
+            font-weight: bold;
+            color: #667eea;
+        }
+        
+        .stat-label {
+            font-size: 11px;
+            color: #aaa;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        /* Node and link styles */
+        .node {
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .node:hover {
+            filter: brightness(1.3);
+        }
+        
+        .node circle {
+            stroke-width: 3px;
+            stroke: rgba(255, 255, 255, 0.3);
+        }
+        
+        .node.critical circle {
+            stroke: #f5576c;
+            stroke-width: 4px;
+        }
+        
+        .node.selected circle {
+            stroke: #fff;
+            stroke-width: 5px;
+        }
+        
+        .node text {
+            font-size: 11px;
+            fill: #eee;
+            text-anchor: middle;
+            pointer-events: none;
+            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
+        }
+        
+        .link {
+            stroke: rgba(102, 126, 234, 0.4);
+            stroke-width: 2px;
+            fill: none;
+        }
+        
+        .link.critical {
+            stroke: rgba(245, 87, 108, 0.6);
+            stroke-width: 3px;
+        }
+        
+        .link-label {
+            font-size: 10px;
+            fill: #aaa;
+            text-anchor: middle;
+            pointer-events: none;
+        }
+        
+        .milestone-cluster {
+            fill: none;
+            stroke: rgba(102, 126, 234, 0.2);
+            stroke-width: 2px;
+            stroke-dasharray: 5, 5;
+        }
+    </style>
+</head>
+<body>
+    <div id="container">
+        <svg id="graph"></svg>
+        
+        <div class="controls">
+            <h2>🎛️ Controls</h2>
+            
+            <div class="control-group">
+                <label>View Mode</label>
+                <select id="viewMode">
+                    <option value="all">All Tasks</option>
+                    <option value="critical">Critical Path Only</option>
+                    <option value="milestone1">Milestone 1</option>
+                    <option value="milestone2">Milestone 2</option>
+                    <option value="milestone3">Milestone 3</option>
+                    <option value="milestone4">Milestone 4</option>
+                    <option value="milestone5">Milestone 5</option>
+                    <option value="milestone6">Milestone 6</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Agent Filter</label>
+                <select id="agentFilter">
+                    <option value="all">All Agents</option>
+                    <option value="ARCH">ARCH</option>
+                    <option value="DEV">DEV</option>
+                    <option value="CRYPTO">CRYPTO</option>
+                    <option value="DEVOPS">DEVOPS</option>
+                    <option value="UX">UX</option>
+                    <option value="SEC">SEC</option>
+                    <option value="QA">QA</option>
+                </select>
+            </div>
+            
+            <div class="control-group">
+                <label>Node Size</label>
+                <input type="range" id="nodeSize" min="10" max="50" value="25">
+            </div>
+            
+            <div class="control-group">
+                <label>Link Strength</label>
+                <input type="range" id="linkStrength" min="0.1" max="2" step="0.1" value="0.5">
+            </div>
+        </div>
+        
+        <div class="legend">
+            <h3>📊 Milestones</h3>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #667eea;"></div>
+                <span>Foundation & Setup</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #764ba2;"></div>
+                <span>Platform Customization</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f093fb;"></div>
+                <span>Cryptographic Voting</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4facfe;"></div>
+                <span>Censorship Resistance</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #43e97b;"></div>
+                <span>Security & Testing</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f5576c;"></div>
+                <span>Documentation & Launch</span>
+            </div>
+        </div>
+        
+        <div class="info-panel" id="infoPanel">
+            <button class="close-btn" onclick="closeInfo()">&times;</button>
+            <h3 id="infoTitle">Task Details</h3>
+            <div id="infoContent"></div>
+        </div>
+        
+        <div class="stats">
+            <div class="stat-item">
+                <div class="stat-number" id="visibleNodes">0</div>
+                <div class="stat-label">Visible Tasks</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="visibleLinks">0</div>
+                <div class="stat-label">Dependencies</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-number" id="totalHours">0</div>
+                <div class="stat-label">Total Hours</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Task data with dependencies
+        const tasks = [
+            // Milestone 1: Foundation & Setup
+            { id: "1.1", name: "Project Init", milestone: 1, agent: "DEV", hours: 18, week: 1, critical: true, deps: [] },
+            { id: "1.2", name: "Tech Stack", milestone: 1, agent: "ARCH", hours: 26, week: 1, critical: true, deps: ["1.1"] },
+            { id: "1.3", name: "Infrastructure", milestone: 1, agent: "DEVOPS", hours: 28, week: 2, critical: true, deps: ["1.2"] },
+            { id: "1.4", name: "CONSUL Fork", milestone: 1, agent: "DEV", hours: 22, week: 2, critical: true, deps: ["1.2"] },
+            
+            // Milestone 2: Platform Customization
+            { id: "2.1", name: "Branding", milestone: 2, agent: "UX", hours: 28, week: 3, critical: true, deps: ["1.4"] },
+            { id: "2.2", name: "Registration", milestone: 2, agent: "DEV", hours: 48, week: 3, critical: true, deps: ["2.1"] },
+            { id: "2.3", name: "2FA", milestone: 2, agent: "DEV", hours: 22, week: 4, critical: false, deps: ["2.2"] },
+            { id: "2.4", name: "Biometrics", milestone: 2, agent: "DEV+SEC", hours: 60, week: 4, critical: true, deps: ["2.2"] },
+            
+            // Milestone 3: Cryptographic Voting
+            { id: "3.1", name: "Helios Arch", milestone: 3, agent: "CRYPTO", hours: 34, week: 5, critical: true, deps: ["2.1"] },
+            { id: "3.2", name: "Helios Deploy", milestone: 3, agent: "DEVOPS", hours: 38, week: 6, critical: true, deps: ["3.1"] },
+            { id: "3.3", name: "API Bridge", milestone: 3, agent: "DEV", hours: 52, week: 6, critical: true, deps: ["3.2"] },
+            { id: "3.4", name: "Voting UI", milestone: 3, agent: "UX+DEV", hours: 52, week: 7, critical: true, deps: ["3.3"] },
+            { id: "3.5", name: "Privacy", milestone: 3, agent: "CRYPTO", hours: 32, week: 8, critical: false, deps: ["3.4"] },
+            
+            // Milestone 4: Censorship Resistance (parallel)
+            { id: "4.1", name: "Tor Hardening", milestone: 4, agent: "DEVOPS", hours: 22, week: 6, critical: false, deps: ["1.3"] },
+            { id: "4.2", name: "Domain Front", milestone: 4, agent: "DEVOPS", hours: 28, week: 7, critical: false, deps: ["4.1"] },
+            { id: "4.3", name: "IPFS", milestone: 4, agent: "DEVOPS", hours: 38, week: 7, critical: false, deps: ["4.2"] },
+            { id: "4.4", name: "VPN Guide", milestone: 4, agent: "SEC", hours: 18, week: 8, critical: false, deps: ["4.2"] },
+            
+            // Milestone 5: Security & Testing
+            { id: "5.1", name: "Security Audit", milestone: 5, agent: "SEC", hours: 54, week: 9, critical: true, deps: ["3.5"] },
+            { id: "5.2", name: "Bio Testing", milestone: 5, agent: "SEC+QA", hours: 32, week: 9, critical: false, deps: ["2.4"] },
+            { id: "5.3", name: "Load Testing", milestone: 5, agent: "QA", hours: 24, week: 9, critical: false, deps: ["3.4"] },
+            { id: "5.4", name: "E2E Testing", milestone: 5, agent: "QA", hours: 40, week: 10, critical: true, deps: ["5.1"] },
+            
+            // Milestone 6: Documentation & Launch
+            { id: "6.1", name: "User Docs", milestone: 6, agent: "UX", hours: 34, week: 11, critical: true, deps: ["5.4"] },
+            { id: "6.2", name: "Admin Docs", milestone: 6, agent: "ARCH", hours: 30, week: 11, critical: false, deps: ["6.1"] },
+            { id: "6.3", name: "Security Policy", milestone: 6, agent: "SEC", hours: 28, week: 11, critical: false, deps: ["5.1"] },
+            { id: "6.4", name: "Beta Testing", milestone: 6, agent: "ALL", hours: 50, week: 11, critical: true, deps: ["6.1"] },
+            { id: "6.5", name: "Launch", milestone: 6, agent: "ALL", hours: 32, week: 12, critical: true, deps: ["6.4"] },
+        ];
+
+        // Milestone colors
+        const milestoneColors = {
+            1: "#667eea",
+            2: "#764ba2",
+            3: "#f093fb",
+            4: "#4facfe",
+            5: "#43e97b",
+            6: "#f5576c"
+        };
+
+        // Create links from dependencies
+        const links = [];
+        tasks.forEach(task => {
+            task.deps.forEach(depId => {
+                const source = tasks.find(t => t.id === depId);
+                if (source) {
+                    links.push({
+                        source: source.id,
+                        target: task.id,
+                        agent: task.agent,
+                        hours: task.hours,
+                        critical: source.critical && task.critical
+                    });
+                }
+            });
+        });
+
+        // SVG setup
+        const width = window.innerWidth;
+        const height = window.innerHeight;
+        
+        const svg = d3.select("#graph")
+            .attr("width", width)
+            .attr("height", height);
+
+        // Add zoom behavior
+        const g = svg.append("g");
+        
+        const zoom = d3.zoom()
+            .scaleExtent([0.1, 4])
+            .on("zoom", (event) => {
+                g.attr("transform", event.transform);
+            });
+        
+        svg.call(zoom);
+
+        // Force simulation
+        let simulation = d3.forceSimulation(tasks)
+            .force("link", d3.forceLink(links).id(d => d.id).distance(150))
+            .force("charge", d3.forceManyBody().strength(-300))
+            .force("center", d3.forceCenter(width / 2, height / 2))
+            .force("collision", d3.forceCollide().radius(40));
+
+        // Draw links
+        const link = g.append("g")
+            .selectAll("path")
+            .data(links)
+            .join("path")
+            .attr("class", d => `link ${d.critical ? 'critical' : ''}`)
+            .attr("marker-end", "url(#arrowhead)");
+
+        // Add arrowhead marker
+        svg.append("defs").append("marker")
+            .attr("id", "arrowhead")
+            .attr("viewBox", "0 -5 10 10")
+            .attr("refX", 35)
+            .attr("refY", 0)
+            .attr("markerWidth", 6)
+            .attr("markerHeight", 6)
+            .attr("orient", "auto")
+            .append("path")
+            .attr("d", "M0,-5L10,0L0,5")
+            .attr("fill", "rgba(102, 126, 234, 0.6)");
+
+        // Link labels
+        const linkLabel = g.append("g")
+            .selectAll("text")
+            .data(links)
+            .join("text")
+            .attr("class", "link-label")
+            .text(d => `${d.agent} (${d.hours}h)`);
+
+        // Draw nodes
+        const node = g.append("g")
+            .selectAll("g")
+            .data(tasks)
+            .join("g")
+            .attr("class", d => `node ${d.critical ? 'critical' : ''}`)
+            .call(drag(simulation))
+            .on("click", showInfo);
+
+        node.append("circle")
+            .attr("r", 25)
+            .attr("fill", d => milestoneColors[d.milestone]);
+
+        node.append("text")
+            .attr("dy", 4)
+            .text(d => d.id);
+
+        // Update positions on tick
+        simulation.on("tick", () => {
+            link.attr("d", d => {
+                const dx = d.target.x - d.source.x;
+                const dy = d.target.y - d.source.y;
+                const dr = Math.sqrt(dx * dx + dy * dy);
+                return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
+            });
+
+            linkLabel
+                .attr("x", d => (d.source.x + d.target.x) / 2)
+                .attr("y", d => (d.source.y + d.target.y) / 2);
+
+            node.attr("transform", d => `translate(${d.x},${d.y})`);
+        });
+
+        // Drag behavior
+        function drag(simulation) {
+            function dragstarted(event) {
+                if (!event.active) simulation.alphaTarget(0.3).restart();
+                event.subject.fx = event.subject.x;
+                event.subject.fy = event.subject.y;
+            }
+
+            function dragged(event) {
+                event.subject.fx = event.x;
+                event.subject.fy = event.y;
+            }
+
+            function dragended(event) {
+                if (!event.active) simulation.alphaTarget(0);
+                event.subject.fx = null;
+                event.subject.fy = null;
+            }
+
+            return d3.drag()
+                .on("start", dragstarted)
+                .on("drag", dragged)
+                .on("end", dragended);
+        }
+
+        // Show task info
+        function showInfo(event, d) {
+            const panel = document.getElementById("infoPanel");
+            const title = document.getElementById("infoTitle");
+            const content = document.getElementById("infoContent");
+
+            title.textContent = `${d.id}: ${d.name}`;
+            
+            content.innerHTML = `
+                <div class="info-row">
+                    <div class="info-label">Agent</div>
+                    <div class="info-value">${d.agent}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Week</div>
+                    <div class="info-value">Week ${d.week}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Estimated Hours</div>
+                    <div class="info-value">${d.hours} hours</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Critical Path</div>
+                    <div class="info-value">${d.critical ? '<span class="critical-badge">CRITICAL</span>' : 'No'}</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Dependencies</div>
+                    <div class="info-value">${d.deps.length > 0 ? d.deps.join(", ") : "None"}</div>
+                </div>
+            `;
+
+            panel.classList.add("active");
+
+            // Highlight selected node
+            node.classed("selected", n => n.id === d.id);
+        }
+
+        function closeInfo() {
+            document.getElementById("infoPanel").classList.remove("active");
+            node.classed("selected", false);
+        }
+
+        // Update stats
+        function updateStats() {
+            const visibleTasks = tasks.filter(t => t.visible !== false);
+            const visibleLinks = links.filter(l => {
+                const source = tasks.find(t => t.id === l.source.id || t.id === l.source);
+                const target = tasks.find(t => t.id === l.target.id || t.id === l.target);
+                return source?.visible !== false && target?.visible !== false;
+            });
+            const totalHours = visibleTasks.reduce((sum, t) => sum + t.hours, 0);
+
+            document.getElementById("visibleNodes").textContent = visibleTasks.length;
+            document.getElementById("visibleLinks").textContent = visibleLinks.length;
+            document.getElementById("totalHours").textContent = totalHours;
+        }
+
+        // Filters
+        document.getElementById("viewMode").addEventListener("change", (e) => {
+            const mode = e.target.value;
+            
+            tasks.forEach(task => {
+                if (mode === "all") {
+                    task.visible = true;
+                } else if (mode === "critical") {
+                    task.visible = task.critical;
+                } else if (mode.startsWith("milestone")) {
+                    const milestoneNum = parseInt(mode.replace("milestone", ""));
+                    task.visible = task.milestone === milestoneNum;
+                }
+            });
+
+            node.style("display", d => d.visible ? "block" : "none");
+            link.style("display", d => {
+                const source = tasks.find(t => t.id === d.source.id || t.id === d.source);
+                const target = tasks.find(t => t.id === d.target.id || t.id === d.target);
+                return source?.visible && target?.visible ? "block" : "none";
+            });
+            linkLabel.style("display", d => {
+                const source = tasks.find(t => t.id === d.source.id || t.id === d.source);
+                const target = tasks.find(t => t.id === d.target.id || t.id === d.target);
+                return source?.visible && target?.visible ? "block" : "none";
+            });
+
+            updateStats();
+            simulation.alpha(0.3).restart();
+        });
+
+        document.getElementById("agentFilter").addEventListener("change", (e) => {
+            const agent = e.target.value;
+            
+            tasks.forEach(task => {
+                if (agent === "all") {
+                    task.visible = true;
+                } else {
+                    task.visible = task.agent.includes(agent);
+                }
+            });
+
+            node.style("display", d => d.visible ? "block" : "none");
+            link.style("display", d => {
+                const source = tasks.find(t => t.id === d.source.id || t.id === d.source);
+                const target = tasks.find(t => t.id === d.target.id || t.id === d.target);
+                return source?.visible && target?.visible ? "block" : "none";
+            });
+            linkLabel.style("display", d => {
+                const source = tasks.find(t => t.id === d.source.id || t.id === d.source);
+                const target = tasks.find(t => t.id === d.target.id || t.id === d.target);
+                return source?.visible && target?.visible ? "block" : "none";
+            });
+
+            updateStats();
+            simulation.alpha(0.3).restart();
+        });
+
+        document.getElementById("nodeSize").addEventListener("input", (e) => {
+            const size = parseInt(e.target.value);
+            node.select("circle").attr("r", size);
+        });
+
+        document.getElementById("linkStrength").addEventListener("input", (e) => {
+            const strength = parseFloat(e.target.value);
+            simulation.force("link").strength(strength);
+            simulation.alpha(0.3).restart();
+        });
+
+        // Initial stats
+        updateStats();
+    </script>
+</body>
+</html>

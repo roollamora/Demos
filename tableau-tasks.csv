@@ -1,0 +1,27 @@
+Milestone,Task_ID,Task_Name,Week_Start,Week_End,Start_Date,End_Date,Agent_Vector,Critical_Path,Estimated_Hours,Status,Milestone_Order
+1. Foundation & Setup,1.1,Project Initialization,1,1,2026-03-10,2026-03-17,DEV,Yes,18,Not Started,1
+1. Foundation & Setup,1.2,Technology Stack Selection,1,2,2026-03-10,2026-03-24,ARCH+CRYPTO,Yes,26,Not Started,1
+1. Foundation & Setup,1.3,Infrastructure Provisioning,2,2,2026-03-17,2026-03-24,DEVOPS,Yes,28,Not Started,1
+1. Foundation & Setup,1.4,CONSUL Platform Fork,2,2,2026-03-17,2026-03-24,DEV+QA,Yes,22,Not Started,1
+2. Platform Customization,2.1,CONSUL Branding & Localization,3,3,2026-03-24,2026-03-31,UX+DEV,Yes,28,Not Started,2
+2. Platform Customization,2.2,User Registration Module,3,4,2026-03-24,2026-04-07,DEV,Yes,48,Not Started,2
+2. Platform Customization,2.3,Two-Factor Authentication,4,4,2026-03-31,2026-04-07,DEV,No,22,Not Started,2
+2. Platform Customization,2.4,Biometric Identity Verification,4,5,2026-03-31,2026-04-14,DEV+SEC,Yes,60,Not Started,2
+3. Cryptographic Voting,3.1,Helios Integration Architecture,5,6,2026-04-07,2026-04-21,CRYPTO+ARCH,Yes,34,Not Started,3
+3. Cryptographic Voting,3.2,Helios Deployment,6,6,2026-04-14,2026-04-21,DEVOPS+CRYPTO,Yes,38,Not Started,3
+3. Cryptographic Voting,3.3,CONSUL-Helios API Bridge,6,7,2026-04-14,2026-04-28,DEV,Yes,52,Not Started,3
+3. Cryptographic Voting,3.4,Voting UI Components,7,8,2026-04-21,2026-05-05,UX+DEV,Yes,52,Not Started,3
+3. Cryptographic Voting,3.5,Vote Privacy & Anonymization,8,8,2026-04-28,2026-05-05,CRYPTO+SEC,No,32,Not Started,3
+4. Censorship Resistance,4.1,Tor Hidden Service Hardening,6,7,2026-04-14,2026-04-28,DEVOPS+SEC,No,22,Not Started,4
+4. Censorship Resistance,4.2,Domain Fronting Setup,7,8,2026-04-21,2026-05-05,DEVOPS,No,28,Not Started,4
+4. Censorship Resistance,4.3,Content Delivery via IPFS,7,8,2026-04-21,2026-05-05,DEVOPS+DEV,No,38,Not Started,4
+4. Censorship Resistance,4.4,VPN/Proxy Recommendations,8,8,2026-04-28,2026-05-05,SEC+UX,No,18,Not Started,4
+5. Security & Testing,5.1,Security Audit (Internal),9,10,2026-05-05,2026-05-19,SEC+ARCH,Yes,54,Not Started,5
+5. Security & Testing,5.2,Biometric Security Testing,9,10,2026-05-05,2026-05-19,SEC+QA,No,32,Not Started,5
+5. Security & Testing,5.3,Load Testing,9,10,2026-05-05,2026-05-19,QA+DEVOPS,No,24,Not Started,5
+5. Security & Testing,5.4,End-to-End Testing,10,10,2026-05-12,2026-05-19,QA+DEV,Yes,40,Not Started,5
+6. Documentation & Launch,6.1,User Documentation,11,11,2026-05-19,2026-05-26,UX+DEV,Yes,34,Not Started,6
+6. Documentation & Launch,6.2,Administrator Documentation,11,11,2026-05-19,2026-05-26,ARCH+DEVOPS,No,30,Not Started,6
+6. Documentation & Launch,6.3,Security & Privacy Policy,11,11,2026-05-19,2026-05-26,SEC+ARCH,No,28,Not Started,6
+6. Documentation & Launch,6.4,Beta Testing Program,11,12,2026-05-19,2026-06-02,ALL,Yes,50,Not Started,6
+6. Documentation & Launch,6.5,Launch Preparation,12,12,2026-05-26,2026-06-02,ALL,Yes,32,Not Started,6

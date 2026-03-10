@@ -1,0 +1,4 @@
+AuthType Basic
+AuthName "Digital Democracy Dashboard"
+AuthUserFile /path/to/.htpasswd
+Require valid-user

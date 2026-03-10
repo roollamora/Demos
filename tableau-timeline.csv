@@ -1,0 +1,13 @@
+Week,Start_Date,End_Date,Milestone,Critical_Tasks,Total_Tasks,Estimated_Hours
+1,2026-03-10,2026-03-16,1. Foundation & Setup,5,8,80
+2,2026-03-17,2026-03-23,1. Foundation & Setup,4,9,90
+3,2026-03-24,2026-03-30,2. Platform Customization,3,6,70
+4,2026-03-31,2026-04-06,2. Platform Customization,4,8,85
+5,2026-04-07,2026-04-13,2. Platform Customization,3,6,75
+6,2026-04-14,2026-04-20,3. Cryptographic Voting,4,8,90
+7,2026-04-21,2026-04-27,3. Cryptographic Voting,4,9,95
+8,2026-04-28,2026-05-04,3. Cryptographic Voting,3,10,85
+9,2026-05-05,2026-05-11,5. Security & Testing,2,6,70
+10,2026-05-12,2026-05-18,5. Security & Testing,3,8,80
+11,2026-05-19,2026-05-25,6. Documentation & Launch,2,8,75
+12,2026-05-26,2026-06-01,6. Documentation & Launch,4,9,85

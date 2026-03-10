@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Democracy - Project Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="tabs">
+        <button class="tab active" onclick="switchTab('status')">📊 Status & Checklist</button>
+        <button class="tab" onclick="switchTab('network')">🔗 Network Graph</button>
+    </div>
+
+    <!-- Status View -->
+    <div id="status-view" class="tab-content active">
+        <div class="status-container">
+            <header>
+                <h1>🗳️ Digital Democracy Platform - Project Status</h1>
+                <p>Track progress, manage tasks, and monitor project health</p>
+            </header>
+
+            <div class="stats">
+                <div class="stat-card">
+                    <div class="stat-number" id="totalTasks">0</div>
+                    <div class="stat-label">Total Tasks</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedTasks">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="inProgressTasks">0</div>
+                    <div class="stat-label">In Progress</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="totalHours">0</div>
+                    <div class="stat-label">Total Hours</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-number" id="completedHours">0</div>
+                    <div class="stat-label">Hours Completed</div>
+                </div>
+            </div>
+
+            <div class="controls">
+                <button class="btn btn-primary" onclick="saveProgress()">💾 Save Progress</button>
+                <button class="btn btn-secondary" onclick="exportData()">📊 Export CSV</button>
+                <button class="btn btn-danger" onclick="resetAll()">🔄 Reset All</button>
+                <input type="text" id="searchBox" placeholder="Search tasks..." oninput="filterTasks()">
+                <select id="filterStatus" onchange="filterTasks()">
+                    <option value="all">All Status</option>
+                    <option value="not-started">Not Started</option>
+                    <option value="in-progress">In Progress</option>
+                    <option value="completed">Completed</option>
+                </select>
+            </div>
+
+            <div id="milestones"></div>
+
+            <div class="projection">
+                <h2>📈 Project Projection</h2>
+                <div>
+                    <strong>Overall Progress:</strong>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="overallProgress">0%</div>
+                    </div>
+                </div>
+                <div style="margin-top: 20px;">
+                    <p><strong>Estimated Completion:</strong> <span id="estimatedCompletion">-</span></p>
+                    <p><strong>Days Remaining:</strong> <span id="daysRemaining">-</span></p>
+                    <p><strong>Current Velocity:</strong> <span id="velocity">-</span> hours/week</p>
+                    <p><strong>On Track:</strong> <span id="onTrack">-</span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Network Graph View -->
+    <div id="network-view" class="tab-content">
+        <div id="graph-container">
+            <div class="graph-controls">
+                <h2>🔗 Network Controls</h2>
+                <div class="control-group">
+                    <label>Search Task</label>
+                    <input type="text" id="graphSearch" placeholder="Task ID or name..." oninput="searchGraph()">
+                </div>
+                <div class="control-group">
+                    <label>Filter by Milestone</label>
+                    <select id="milestoneFilter" onchange="filterGraph()">
+                        <option value="all">All Milestones</option>
+                        <option value="1">M1: Foundation</option>
+                        <option value="2">M2: Platform</option>
+                        <option value="3">M3: Voting</option>
+                        <option value="4">M4: Censorship</option>
+                        <option value="5">M5: Security</option>
+                        <option value="6">M6: Launch</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label>Filter by Agent</label>
+                    <select id="agentFilter" onchange="filterGraph()">
+                        <option value="all">All Agents</option>
+                        <option value="DEV">DEV</option>
+                        <option value="ARCH">ARCH</option>
+                        <option value="CRYPTO">CRYPTO</option>
+                        <option value="DEVOPS">DEVOPS</option>
+                        <option value="UX">UX</option>
+                        <option value="SEC">SEC</option>
+                        <option value="QA">QA</option>
+                    </select>
+                </div>
+                <div class="control-group">
+                    <label><input type="checkbox" id="showCritical" onchange="filterGraph()" checked> Show Critical Path Only</label>
+                </div>
+            </div>
+            
+            <div class="graph-legend">
+                <h3>Legend</h3>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #667eea;"></div>
+                    <span>Foundation & Setup</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #764ba2;"></div>
+                    <span>Platform Customization</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f093fb;"></div>
+                    <span>Cryptographic Voting</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #4facfe;"></div>
+                    <span>Censorship Resistance</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #43e97b;"></div>
+                    <span>Security & Testing</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-color" style="background: #f5576c;"></div>
+                    <span>Documentation & Launch</span>
+                </div>
+                <div class="legend-item" style="margin-top: 10px;">
+                    <div style="width: 30px; height: 2px; background: #667eea; margin-right: 10px;"></div>
+                    <span>Direct Dependency</span>
+                </div>
+                <div class="legend-item">
+                    <div style="width: 30px; height: 2px; background: #aaa; margin-right: 10px; border-top: 2px dashed #aaa;"></div>
+                    <span>Indirect Connection</span>
+                </div>
+            </div>
+            
+            <svg id="graph"></svg>
+        </div>
+    </div>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+    <script>
+        // Check authentication
+        if (sessionStorage.getItem('dashboard_auth') !== 'true') {
+            window.location.href = 'auth.html';
+        } else {
+            // Check if session expired (24 hours)
+            const authTime = parseInt(sessionStorage.getItem('auth_time'));
+            const now = Date.now();
+            if (now - authTime >= 24 * 60 * 60 * 1000) {
+                sessionStorage.removeItem('dashboard_auth');
+                sessionStorage.removeItem('auth_time');
+                window.location.href = 'auth.html';
+            }
+        }
+        
+        // Add logout button
+        document.addEventListener('DOMContentLoaded', () => {
+            const tabs = document.querySelector('.tabs');
+            const logoutBtn = document.createElement('button');
+            logoutBtn.className = 'tab';
+            logoutBtn.textContent = '🚪 Logout';
+            logoutBtn.style.marginLeft = 'auto';
+            logoutBtn.onclick = () => {
+                sessionStorage.removeItem('dashboard_auth');
+                sessionStorage.removeItem('auth_time');
+                window.location.href = 'auth.html';
+            };
+            tabs.appendChild(logoutBtn);
+        });
+    </script>
+</body>
+</html>

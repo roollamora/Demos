@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Digital Democracy Platform - WBS Timeline</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .stat-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        .stat-card.critical {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+        .stat-card.parallel {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+        }
+        .stat-card.hours {
+            background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+        }
+        .stat-number {
+            font-size: 36px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        .stat-label {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        .chart-container {
+            margin-bottom: 40px;
+            position: relative;
+            height: 600px;
+        }
+        .legend {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .legend-color {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+        }
+        .milestone-section {
+            margin-bottom: 30px;
+        }
+        .milestone-header {
+            background: #667eea;
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .task-grid {
+            display: grid;
+            gap: 10px;
+        }
+        .task-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            border-radius: 4px;
+            display: grid;
+            grid-template-columns: 100px 1fr 120px 100px 80px;
+            gap: 15px;
+            align-items: center;
+        }
+        .task-card.critical {
+            border-left-color: #f5576c;
+            background: #fff5f7;
+        }
+        .task-id {
+            font-weight: bold;
+            color: #667eea;
+        }
+        .task-name {
+            color: #333;
+        }
+        .task-agent {
+            color: #666;
+            font-size: 14px;
+        }
+        .task-duration {
+            color: #666;
+            font-size: 14px;
+        }
+        .task-hours {
+            color: #43e97b;
+            font-weight: bold;
+        }
+        .critical-badge {
+            background: #f5576c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        .filters {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+        .filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #667eea;
+            background: white;
+            color: #667eea;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+        .filter-btn:hover {
+            background: #667eea;
+            color: white;
+        }
+        .filter-btn.active {
+            background: #667eea;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🗳️ Digital Democracy Platform - Work Breakdown Structure</h1>
+        <p class="subtitle">12-Week Implementation Timeline | 380+ Tasks | 6 Milestones</p>
+        
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-number">115</div>
+                <div class="stat-label">Total Tasks</div>
+            </div>
+            <div class="stat-card critical">
+                <div class="stat-number">62</div>
+                <div class="stat-label">Critical Path Tasks</div>
+            </div>
+            <div class="stat-card parallel">
+                <div class="stat-number">6</div>
+                <div class="stat-label">Parallel Streams</div>
+            </div>
+            <div class="stat-card hours">
+                <div class="stat-number">850</div>
+                <div class="stat-label">Total Hours</div>
+            </div>
+        </div>
+
+        <div class="legend">
+            <div class="legend-item">
+                <div class="legend-color" style="background: #667eea;"></div>
+                <span>Foundation & Setup</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #764ba2;"></div>
+                <span>Platform Customization</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f093fb;"></div>
+                <span>Cryptographic Voting</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #4facfe;"></div>
+                <span>Censorship Resistance</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #43e97b;"></div>
+                <span>Security & Testing</span>
+            </div>
+            <div class="legend-item">
+                <div class="legend-color" style="background: #f5576c;"></div>
+                <span>Documentation & Launch</span>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="ganttChart"></canvas>
+        </div>
+
+        <div class="filters">
+            <button class="filter-btn active" onclick="filterTasks('all')">All Tasks</button>
+            <button class="filter-btn" onclick="filterTasks('critical')">Critical Path Only</button>
+            <button class="filter-btn" onclick="filterTasks('milestone1')">Milestone 1</button>
+            <button class="filter-btn" onclick="filterTasks('milestone2')">Milestone 2</button>
+            <button class="filter-btn" onclick="filterTasks('milestone3')">Milestone 3</button>
+            <button class="filter-btn" onclick="filterTasks('milestone4')">Milestone 4</button>
+            <button class="filter-btn" onclick="filterTasks('milestone5')">Milestone 5</button>
+            <button class="filter-btn" onclick="filterTasks('milestone6')">Milestone 6</button>
+        </div>
+
+        <div id="taskList"></div>
+    </div>
+
+    <script>
+        // Task data
+        const milestones = [
+            {
+                name: "Foundation & Setup",
+                weeks: "1-2",
+                color: "#667eea",
+                tasks: [
+                    { id: "1.1.1", name: "Repository Setup", agent: "DEV", week: 1, hours: 4, critical: true },
+                    { id: "1.1.2", name: "Dev Environment Config", agent: "DEV", week: 1, hours: 6, critical: true },
+                    { id: "1.1.3", name: "CI/CD Pipeline", agent: "DEVOPS", week: 1, hours: 8, critical: true },
+                    { id: "1.2.1", name: "Platform Evaluation", agent: "ARCH", week: 1, hours: 6, critical: true },
+                    { id: "1.2.2", name: "Crypto Library Selection", agent: "CRYPTO", week: 1-2, hours: 8, critical: true },
+                    { id: "1.3.1", name: "VPS Setup", agent: "DEVOPS", week: 2, hours: 4, critical: true },
+                    { id: "1.3.3", name: "Tor Configuration", agent: "DEVOPS+SEC", week: 2, hours: 8, critical: true },
+                    { id: "1.4.2", name: "Local Dev Setup", agent: "DEV", week: 2, hours: 8, critical: true }
+                ]
+            },
+            {
+                name: "Platform Customization",
+                weeks: "3-4",
+                color: "#764ba2",
+                tasks: [
+                    { id: "2.1.1", name: "Persian Language Pack", agent: "UX+DEV", week: 3, hours: 12, critical: true },
+                    { id: "2.2.1", name: "Registration Form", agent: "DEV", week: 3, hours: 8, critical: true },
+                    { id: "2.2.2", name: "Email Verification", agent: "DEV", week: 3-4, hours: 8, critical: true },
+                    { id: "2.4.1", name: "Face Detection Integration", agent: "DEV", week: 4, hours: 8, critical: true },
+                    { id: "2.4.2", name: "Liveness Detection", agent: "DEV+SEC", week: 4-5, hours: 12, critical: true },
+                    { id: "2.4.4", name: "Duplicate Detection", agent: "DEV+SEC", week: 5, hours: 12, critical: true }
+                ]
+            },
+            {
+                name: "Cryptographic Voting",
+                weeks: "5-8",
+                color: "#f093fb",
+                tasks: [
+                    { id: "3.1.1", name: "Helios Analysis", agent: "CRYPTO+ARCH", week: 5, hours: 8, critical: true },
+                    { id: "3.2.1", name: "Helios Installation", agent: "DEVOPS", week: 6, hours: 8, critical: true },
+                    { id: "3.3.1", name: "API Authentication", agent: "DEV", week: 6-7, hours: 8, critical: true },
+                    { id: "3.3.3", name: "Vote Casting Endpoint", agent: "DEV", week: 7, hours: 12, critical: true },
+                    { id: "3.4.1", name: "Vote Creation UI", agent: "UX+DEV", week: 7-8, hours: 10, critical: true },
+                    { id: "3.4.3", name: "Ballot Interface", agent: "UX+DEV", week: 8, hours: 12, critical: true }
+                ]
+            },
+            {
+                name: "Censorship Resistance",
+                weeks: "6-8",
+                color: "#4facfe",
+                tasks: [
+                    { id: "4.1.2", name: "DoS Protection", agent: "DEVOPS+SEC", week: 6-7, hours: 8, critical: false },
+                    { id: "4.2.2", name: "Domain Fronting", agent: "DEVOPS", week: 7, hours: 10, critical: false },
+                    { id: "4.3.2", name: "IPFS Asset Upload", agent: "DEVOPS", week: 7-8, hours: 8, critical: false },
+                    { id: "4.4.2", name: "VPN User Guide", agent: "UX+SEC", week: 8, hours: 8, critical: false }
+                ]
+            },
+            {
+                name: "Security & Testing",
+                weeks: "9-10",
+                color: "#43e97b",
+                tasks: [
+                    { id: "5.1.1", name: "OWASP Top 10 Testing", agent: "SEC", week: 9, hours: 12, critical: true },
+                    { id: "5.1.5", name: "Vulnerability Remediation", agent: "DEV+SEC", week: 9-10, hours: 12, critical: true },
+                    { id: "5.4.1", name: "Test Suite Development", agent: "QA+DEV", week: 10, hours: 12, critical: true },
+                    { id: "5.4.2", name: "Edge Case Testing", agent: "QA", week: 10, hours: 10, critical: true }
+                ]
+            },
+            {
+                name: "Documentation & Launch",
+                weeks: "11-12",
+                color: "#f5576c",
+                tasks: [
+                    { id: "6.1.1", name: "User Guide (Persian)", agent: "UX+DEV", week: 11, hours: 12, critical: true },
+                    { id: "6.4.1", name: "Beta Tester Recruitment", agent: "ALL", week: 11-12, hours: 8, critical: true },
+                    { id: "6.4.3", name: "Test Vote Execution", agent: "ALL", week: 12, hours: 12, critical: true },
+                    { id: "6.5.2", name: "Monitoring Setup", agent: "DEVOPS", week: 12, hours: 10, critical: true },
+                    { id: "6.5.6", name: "Launch Execution", agent: "ALL", week: 12, hours: 4, critical: true }
+                ]
+            }
+        ];
+
+        // Render task list
+        function renderTasks(filter = 'all') {
+            const taskList = document.getElementById('taskList');
+            taskList.innerHTML = '';
+
+            milestones.forEach((milestone, index) => {
+                if (filter !== 'all' && filter !== `milestone${index + 1}`) {
+                    return;
+                }
+
+                const section = document.createElement('div');
+                section.className = 'milestone-section';
+                
+                const header = document.createElement('div');
+                header.className = 'milestone-header';
+                header.style.background = milestone.color;
+                header.innerHTML = `
+                    <div>
+                        <strong>Milestone ${index + 1}: ${milestone.name}</strong>
+                        <span style="opacity: 0.8; margin-left: 15px;">Weeks ${milestone.weeks}</span>
+                    </div>
+                    <div>${milestone.tasks.length} tasks</div>
+                `;
+                section.appendChild(header);
+
+                const grid = document.createElement('div');
+                grid.className = 'task-grid';
+
+                milestone.tasks.forEach(task => {
+                    if (filter === 'critical' && !task.critical) return;
+
+                    const card = document.createElement('div');
+                    card.className = `task-card ${task.critical ? 'critical' : ''}`;
+                    card.innerHTML = `
+                        <div class="task-id">${task.id}</div>
+                        <div class="task-name">${task.name}</div>
+                        <div class="task-agent">${task.agent}</div>
+                        <div class="task-duration">Week ${task.week}</div>
+                        <div class="task-hours">${task.hours}h</div>
+                    `;
+                    grid.appendChild(card);
+                });
+
+                section.appendChild(grid);
+                taskList.appendChild(section);
+            });
+        }
+
+        // Filter function
+        function filterTasks(filter) {
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            renderTasks(filter);
+        }
+
+        // Initial render
+        renderTasks();
+
+        // Create Gantt chart
+        const ctx = document.getElementById('ganttChart').getContext('2d');
+        
+        const chartData = {
+            datasets: milestones.map((milestone, index) => ({
+                label: milestone.name,
+                data: milestone.tasks.map(task => ({
+                    x: [new Date(2026, 2, (task.week.toString().split('-')[0] - 1) * 7 + 10), 
+                        new Date(2026, 2, (task.week.toString().split('-').pop() - 1) * 7 + 17)],
+                    y: task.id
+                })),
+                backgroundColor: milestone.color,
+                borderColor: milestone.color,
+                borderWidth: 2,
+                borderSkipped: false,
+            }))
+        };
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: chartData,
+            options: {
+                indexAxis: 'y',
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: true,
+                        position: 'top'
+                    },
+                    title: {
+                        display: true,
+                        text: '12-Week Gantt Chart',
+                        font: { size: 18 }
+                    }
+                },
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'week'
+                        },
+                        title: {
+                            display: true,
+                            text: 'Timeline (Weeks)'
+                        }
+                    },
+                    y: {
+                        title: {
+                            display: true,
+                            text: 'Tasks'
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
