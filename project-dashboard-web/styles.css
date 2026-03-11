@@ -165,7 +165,7 @@ input, select {
     border-radius: 6px;
     border-left: 4px solid #667eea;
     display: grid;
-    grid-template-columns: 30px 100px 1fr 150px 100px 120px;
+    grid-template-columns: 30px 100px 1fr 150px 100px 80px 120px;
     gap: 15px;
     align-items: center;
 }
@@ -217,6 +217,26 @@ input, select {
     color: #eee;
     cursor: pointer;
 }
+
+.task-ai {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 12px;
+}
+
+.ai-rating {
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 11px;
+}
+
+.ai-1 { background: #f5576c; color: white; }
+.ai-2 { background: #ff9f43; color: white; }
+.ai-3 { background: #f093fb; color: white; }
+.ai-4 { background: #4facfe; color: white; }
+.ai-5 { background: #43e97b; color: white; }
 
 .projection {
     background: #16213e;

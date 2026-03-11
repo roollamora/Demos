@@ -54,6 +54,14 @@
                     <option value="in-progress">In Progress</option>
                     <option value="completed">Completed</option>
                 </select>
+                <select id="filterAI" onchange="filterTasks()">
+                    <option value="all">All AI Levels</option>
+                    <option value="1">🔴 1 - Not AI-doable</option>
+                    <option value="2">🟠 2 - Minimal AI help</option>
+                    <option value="3">🟣 3 - Moderate AI help</option>
+                    <option value="4">🔵 4 - High AI capability</option>
+                    <option value="5">🟢 5 - Fully delegatable</option>
+                </select>
             </div>
 
             <div id="milestones"></div>

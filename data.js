@@ -17,6 +17,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -28,6 +29,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.1.1"]
                 },
                 {
@@ -39,6 +41,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.1.2"]
                 },
                 {
@@ -50,6 +53,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.1.3"]
                 },
                 {
@@ -61,6 +65,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: []
                 },
                 {
@@ -72,6 +77,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["1.2.1"]
                 },
                 {
@@ -83,6 +89,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["1.2.2"]
                 },
                 {
@@ -94,6 +101,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.2.3"]
                 },
                 {
@@ -105,6 +113,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: []
                 },
                 {
@@ -116,6 +125,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.3.1"]
                 },
                 {
@@ -127,6 +137,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["1.3.2"]
                 },
                 {
@@ -138,6 +149,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.3.3"]
                 },
                 {
@@ -149,6 +161,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.3.4"]
                 },
                 {
@@ -160,6 +173,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -171,6 +185,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.4.1"]
                 },
                 {
@@ -182,6 +197,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["1.4.2"]
                 },
                 {
@@ -193,6 +209,7 @@ const PROJECT_DATA = {
                     milestone: 1,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["1.4.3"]
                 }
             ]
@@ -212,6 +229,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: []
                 },
                 {
@@ -223,6 +241,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.1.1"]
                 },
                 {
@@ -234,6 +253,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.1.2"]
                 },
                 {
@@ -245,6 +265,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -256,6 +277,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.2.1"]
                 },
                 {
@@ -267,6 +289,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.2.2"]
                 },
                 {
@@ -278,6 +301,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.2.3"]
                 },
                 {
@@ -289,6 +313,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.2.4"]
                 },
                 {
@@ -300,6 +325,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.2.5"]
                 },
                 {
@@ -311,6 +337,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -322,6 +349,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.3.1"]
                 },
                 {
@@ -333,6 +361,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.3.2"]
                 },
                 {
@@ -344,6 +373,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.3.3"]
                 },
                 {
@@ -355,6 +385,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -366,6 +397,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.4.1"]
                 },
                 {
@@ -377,6 +409,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["2.4.2"]
                 },
                 {
@@ -388,6 +421,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["2.4.3"]
                 },
                 {
@@ -399,6 +433,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["2.4.4"]
                 },
                 {
@@ -410,6 +445,7 @@ const PROJECT_DATA = {
                     milestone: 2,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["2.4.5"]
                 }
             ]
@@ -429,6 +465,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: []
                 },
                 {
@@ -440,6 +477,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.1.1"]
                 },
                 {
@@ -451,6 +489,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["3.1.2"]
                 },
                 {
@@ -462,6 +501,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["3.1.3"]
                 },
                 {
@@ -473,6 +513,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 5,
                     dependencies: []
                 },
                 {
@@ -484,6 +525,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.2.1"]
                 },
                 {
@@ -495,6 +537,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.2.2"]
                 },
                 {
@@ -506,6 +549,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["3.2.3"]
                 },
                 {
@@ -517,6 +561,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["3.2.4"]
                 },
                 {
@@ -528,6 +573,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -539,6 +585,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.3.1"]
                 },
                 {
@@ -550,6 +597,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.3.2"]
                 },
                 {
@@ -561,6 +609,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.3.3"]
                 },
                 {
@@ -572,6 +621,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.3.4"]
                 },
                 {
@@ -583,6 +633,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.3.5"]
                 },
                 {
@@ -594,6 +645,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: []
                 },
                 {
@@ -605,6 +657,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.4.1"]
                 },
                 {
@@ -616,6 +669,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["3.4.2"]
                 },
                 {
@@ -627,6 +681,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.4.3"]
                 },
                 {
@@ -638,6 +693,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["3.4.4"]
                 },
                 {
@@ -649,6 +705,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["3.4.5"]
                 },
                 {
@@ -660,6 +717,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 1,
                     dependencies: []
                 },
                 {
@@ -671,6 +729,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.5.1"]
                 },
                 {
@@ -682,6 +741,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.5.2"]
                 },
                 {
@@ -693,6 +753,7 @@ const PROJECT_DATA = {
                     milestone: 3,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["3.5.3"]
                 }
             ]
@@ -712,6 +773,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -723,6 +785,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.1.1"]
                 },
                 {
@@ -734,6 +797,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.1.2"]
                 },
                 {
@@ -745,6 +809,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.1.3"]
                 },
                 {
@@ -756,6 +821,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -767,6 +833,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.2.1"]
                 },
                 {
@@ -778,6 +845,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.2.2"]
                 },
                 {
@@ -789,6 +857,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.2.3"]
                 },
                 {
@@ -800,6 +869,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 5,
                     dependencies: []
                 },
                 {
@@ -811,6 +881,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.3.1"]
                 },
                 {
@@ -822,6 +893,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.3.2"]
                 },
                 {
@@ -833,6 +905,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.3.3"]
                 },
                 {
@@ -844,6 +917,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["4.3.4"]
                 },
                 {
@@ -855,6 +929,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: []
                 },
                 {
@@ -866,6 +941,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.4.1"]
                 },
                 {
@@ -877,6 +953,7 @@ const PROJECT_DATA = {
                     milestone: 4,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["4.4.2"]
                 }
             ]
@@ -896,6 +973,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -907,6 +985,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["5.1.1"]
                 },
                 {
@@ -918,6 +997,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["5.1.2"]
                 },
                 {
@@ -929,6 +1009,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["5.1.3"]
                 },
                 {
@@ -940,6 +1021,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["5.1.4"]
                 },
                 {
@@ -951,6 +1033,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 1,
                     dependencies: ["5.1.5"]
                 },
                 {
@@ -962,6 +1045,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: []
                 },
                 {
@@ -973,6 +1057,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["5.2.1"]
                 },
                 {
@@ -984,6 +1069,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["5.2.2"]
                 },
                 {
@@ -995,6 +1081,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["5.2.3"]
                 },
                 {
@@ -1006,6 +1093,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -1017,6 +1105,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["5.3.1"]
                 },
                 {
@@ -1028,6 +1117,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["5.3.2"]
                 },
                 {
@@ -1039,6 +1129,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["5.3.3"]
                 },
                 {
@@ -1050,6 +1141,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -1061,6 +1153,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["5.4.1"]
                 },
                 {
@@ -1072,6 +1165,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["5.4.2"]
                 },
                 {
@@ -1083,6 +1177,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["5.4.3"]
                 },
                 {
@@ -1094,6 +1189,7 @@ const PROJECT_DATA = {
                     milestone: 5,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["5.4.4"]
                 }
             ]
@@ -1113,6 +1209,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -1124,6 +1221,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 5,
                     dependencies: ["6.1.1"]
                 },
                 {
@@ -1135,6 +1233,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["6.1.2"]
                 },
                 {
@@ -1146,6 +1245,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["6.1.3"]
                 },
                 {
@@ -1157,6 +1257,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: []
                 },
                 {
@@ -1168,6 +1269,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["6.2.1"]
                 },
                 {
@@ -1179,6 +1281,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["6.2.2"]
                 },
                 {
@@ -1190,6 +1293,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["6.2.3"]
                 },
                 {
@@ -1201,6 +1305,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: []
                 },
                 {
@@ -1212,6 +1317,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["6.3.1"]
                 },
                 {
@@ -1223,6 +1329,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["6.3.2"]
                 },
                 {
@@ -1234,6 +1341,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: false,
                     status: "not-started",
+                    aiCapability: 2,
                     dependencies: ["6.3.3"]
                 },
                 {
@@ -1245,6 +1353,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -1256,6 +1365,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["6.4.1"]
                 },
                 {
@@ -1267,6 +1377,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["6.4.2"]
                 },
                 {
@@ -1278,6 +1389,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["6.4.3"]
                 },
                 {
@@ -1289,6 +1401,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["6.4.4"]
                 },
                 {
@@ -1300,6 +1413,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: []
                 },
                 {
@@ -1311,6 +1425,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 4,
                     dependencies: ["6.5.1"]
                 },
                 {
@@ -1322,6 +1437,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["6.5.2"]
                 },
                 {
@@ -1333,6 +1449,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["6.5.3"]
                 },
                 {
@@ -1344,6 +1461,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["6.5.4"]
                 },
                 {
@@ -1355,6 +1473,7 @@ const PROJECT_DATA = {
                     milestone: 6,
                     critical: true,
                     status: "not-started",
+                    aiCapability: 3,
                     dependencies: ["6.5.5"]
                 }
             ]

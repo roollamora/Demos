@@ -44,12 +44,15 @@ function renderMilestones() {
             </div>
             <div class="milestone-content">
                 ${m.tasks.map(t => `
-                    <div class="task ${t.status.replace('-', '')} ${t.critical ? 'critical' : ''}" data-task-id="${t.id}" data-milestone="${m.id}">
+                    <div class="task ${t.status.replace('-', '')} ${t.critical ? 'critical' : ''}" data-task-id="${t.id}" data-milestone="${m.id}" data-ai="${t.aiCapability || 3}">
                         <input type="checkbox" ${t.status === 'completed' ? 'checked' : ''} onchange="toggleTask('${t.id}', ${m.id})">
                         <div class="task-id">${t.id}</div>
                         <div class="task-name">${t.name}</div>
                         <div class="task-agent">${t.agent}</div>
                         <div class="task-hours">${t.hours}h</div>
+                        <div class="task-ai">
+                            <span class="ai-rating ai-${t.aiCapability || 3}">${t.aiCapability || 3}</span>
+                        </div>
                         <select class="task-status" onchange="changeStatus('${t.id}', ${m.id}, this.value)">
                             <option value="not-started" ${t.status === 'not-started' ? 'selected' : ''}>Not Started</option>
                             <option value="in-progress" ${t.status === 'in-progress' ? 'selected' : ''}>In Progress</option>
@@ -140,13 +143,16 @@ function updateProjection() {
 function filterTasks() {
     const search = document.getElementById('searchBox').value.toLowerCase();
     const status = document.getElementById('filterStatus').value;
+    const aiLevel = document.getElementById('filterAI').value;
     document.querySelectorAll('.task').forEach(el => {
         const id = el.dataset.taskId;
         const name = el.querySelector('.task-name').textContent.toLowerCase();
         const taskStatus = el.querySelector('.task-status').value;
+        const taskAI = el.dataset.ai;
         let show = true;
         if (search && !id.includes(search) && !name.includes(search)) show = false;
         if (status !== 'all' && taskStatus !== status) show = false;
+        if (aiLevel !== 'all' && taskAI !== aiLevel) show = false;
         el.style.display = show ? 'grid' : 'none';
     });
 }
