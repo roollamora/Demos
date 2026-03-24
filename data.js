@@ -42,7 +42,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["1.1.2"]
+                    dependencies: []
                 },
                 {
                     id: "1.1.4",
@@ -54,7 +54,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["1.1.3"]
+                    dependencies: []
                 },
                 {
                     id: "1.2.1",
@@ -66,7 +66,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 2,
-                    dependencies: []
+                    dependencies: ["1.1.4"]
                 },
                 {
                     id: "1.2.2",
@@ -114,7 +114,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["1.1.3"]
                 },
                 {
                     id: "1.3.2",
@@ -174,7 +174,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 5,
-                    dependencies: []
+                    dependencies: ["1.2.4"]
                 },
                 {
                     id: "1.4.2",
@@ -186,7 +186,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["1.4.1"]
+                    dependencies: ["1.1.2", "1.4.1"]
                 },
                 {
                     id: "1.4.3",
@@ -230,7 +230,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["1.4.4"]
                 },
                 {
                     id: "2.1.2",
@@ -242,7 +242,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: ["2.1.1"]
+                    dependencies: []
                 },
                 {
                     id: "2.1.3",
@@ -254,7 +254,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: ["2.1.2"]
+                    dependencies: ["2.1.1", "2.1.2"]
                 },
                 {
                     id: "2.2.1",
@@ -266,7 +266,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["2.1.3"]
                 },
                 {
                     id: "2.2.2",
@@ -326,7 +326,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["2.2.5"]
+                    dependencies: []
                 },
                 {
                     id: "2.3.1",
@@ -338,7 +338,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["2.2.5", "2.2.6"]
                 },
                 {
                     id: "2.3.2",
@@ -514,7 +514,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["3.1.4"]
                 },
                 {
                     id: "3.2.2",
@@ -574,7 +574,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: []
+                    dependencies: ["3.2.5"]
                 },
                 {
                     id: "3.3.2",
@@ -646,7 +646,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: []
+                    dependencies: ["3.3.6"]
                 },
                 {
                     id: "3.4.2",
@@ -706,7 +706,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["3.4.5"]
+                    dependencies: []
                 },
                 {
                     id: "3.5.1",
@@ -718,7 +718,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 1,
-                    dependencies: []
+                    dependencies: ["3.4.5", "3.4.6"]
                 },
                 {
                     id: "3.5.2",
@@ -754,7 +754,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: ["3.5.3"]
+                    dependencies: []
                 }
             ]
         },
@@ -774,7 +774,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: []
+                    dependencies: ["1.3.5"]
                 },
                 {
                     id: "4.1.2",
@@ -798,7 +798,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["4.1.2"]
+                    dependencies: []
                 },
                 {
                     id: "4.1.4",
@@ -810,7 +810,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["4.1.3"]
+                    dependencies: ["4.1.2", "4.1.3"]
                 },
                 {
                     id: "4.2.1",
@@ -822,7 +822,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["4.1.4"]
                 },
                 {
                     id: "4.2.2",
@@ -858,7 +858,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: ["4.2.3"]
+                    dependencies: []
                 },
                 {
                     id: "4.3.1",
@@ -870,7 +870,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["4.2.3", "4.2.4"]
                 },
                 {
                     id: "4.3.2",
@@ -934,7 +934,7 @@ const PROJECT_DATA = {
                 },
                 {
                     id: "4.4.2",
-                    name: "User Guide Creation (Persian)",
+                    name: "Circumvention Guide (Persian)",
                     agent: "UX + SEC",
                     hours: 8,
                     parent: "4.4",
@@ -946,7 +946,7 @@ const PROJECT_DATA = {
                 },
                 {
                     id: "4.4.3",
-                    name: "User Guide Creation (English)",
+                    name: "Circumvention Guide (English)",
                     agent: "UX",
                     hours: 4,
                     parent: "4.4",
@@ -974,7 +974,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 2,
-                    dependencies: []
+                    dependencies: ["2.3.4", "3.5.3"]
                 },
                 {
                     id: "5.1.2",
@@ -1046,7 +1046,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: []
+                    dependencies: ["2.4.6"]
                 },
                 {
                     id: "5.2.2",
@@ -1142,7 +1142,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["5.1.6", "5.2.4", "5.3.4"]
                 },
                 {
                     id: "5.4.2",
@@ -1178,7 +1178,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["5.4.3"]
+                    dependencies: []
                 },
                 {
                     id: "5.4.5",
@@ -1190,7 +1190,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["5.4.4"]
+                    dependencies: ["5.4.3"]
                 }
             ]
         },
@@ -1210,7 +1210,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["4.4.3", "5.4.5"]
                 },
                 {
                     id: "6.1.2",
@@ -1234,7 +1234,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: ["6.1.2"]
+                    dependencies: []
                 },
                 {
                     id: "6.1.4",
@@ -1246,7 +1246,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["6.1.3"]
+                    dependencies: []
                 },
                 {
                     id: "6.2.1",
@@ -1306,7 +1306,7 @@ const PROJECT_DATA = {
                     critical: false,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: []
+                    dependencies: ["3.5.4"]
                 },
                 {
                     id: "6.3.2",
@@ -1354,7 +1354,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: []
+                    dependencies: ["6.1.4"]
                 },
                 {
                     id: "6.4.2",
@@ -1366,7 +1366,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: ["6.4.1"]
+                    dependencies: ["6.1.2", "6.1.3", "6.4.1"]
                 },
                 {
                     id: "6.4.3",
@@ -1414,7 +1414,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: []
+                    dependencies: ["4.3.5", "5.4.4", "6.4.5"]
                 },
                 {
                     id: "6.5.2",
@@ -1438,7 +1438,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 2,
-                    dependencies: ["6.5.2"]
+                    dependencies: []
                 },
                 {
                     id: "6.5.4",
@@ -1450,7 +1450,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["6.5.3"]
+                    dependencies: []
                 },
                 {
                     id: "6.5.5",
@@ -1462,7 +1462,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 3,
-                    dependencies: ["6.5.4"]
+                    dependencies: ["6.2.4", "6.3.4", "6.5.2", "6.5.3", "6.5.4"]
                 },
                 {
                     id: "6.5.6",

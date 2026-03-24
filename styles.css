@@ -332,6 +332,11 @@ input, select {
     border-radius: 12px;
     box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
     z-index: 1000;
+    max-width: 380px;
+    max-height: 60vh;
+    overflow-y: auto;
+    font-size: 12px;
+    line-height: 1.5;
 }
 
 .graph-legend h3 {
