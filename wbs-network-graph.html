@@ -1,670 +1,998 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WBS Network Graph - Task Dependencies</title>
-    <script src="https://d3js.org/d3.v7.min.js"></script>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: #1a1a2e;
-            color: #eee;
-            overflow: hidden;
-        }
-        
-        #container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-        }
-        
-        #graph {
-            width: 100%;
-            height: 100%;
-        }
-        
-        .controls {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            max-width: 300px;
-        }
-        
-        .controls h2 {
-            margin: 0 0 15px 0;
-            font-size: 18px;
-            color: #667eea;
-        }
-        
-        .control-group {
-            margin-bottom: 15px;
-        }
-        
-        .control-group label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 12px;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .control-group select,
-        .control-group input {
-            width: 100%;
-            padding: 8px;
-            background: #16213e;
-            border: 1px solid #667eea;
-            border-radius: 6px;
-            color: #eee;
-            font-size: 14px;
-        }
-        
-        .legend {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-        }
-        
-        .legend h3 {
-            margin: 0 0 15px 0;
-            font-size: 14px;
-            color: #667eea;
-        }
-        
-        .legend-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 12px;
-        }
-        
-        .legend-color {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            margin-right: 10px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-        }
-        
-        .info-panel {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            background: rgba(26, 26, 46, 0.95);
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            max-width: 350px;
-            display: none;
-        }
-        
-        .info-panel.active {
-            display: block;
-        }
-        
-        .info-panel h3 {
-            margin: 0 0 10px 0;
-            color: #667eea;
-            font-size: 16px;
-        }
-        
-        .info-panel .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: none;
-            border: none;
-            color: #aaa;
-            font-size: 24px;
-            cursor: pointer;
-            padding: 0;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-            text-align: center;
-        }
-        
-        .info-panel .close-btn:hover {
-            color: #fff;
-        }
-        
-        .info-row {
-            margin-bottom: 10px;
-            font-size: 13px;
-        }
-        
-        .info-label {
-            color: #aaa;
-            font-size: 11px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 3px;
-        }
-        
-        .info-value {
-            color: #eee;
-        }
-        
-        .critical-badge {
-            display: inline-block;
-            background: #f5576c;
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 11px;
-            font-weight: bold;
-        }
-        
-        .stats {
-            position: absolute;
-            bottom: 20px;
-            right: 20px;
-            background: rgba(26, 26, 46, 0.95);
-            padding: 15px 20px;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            display: flex;
-            gap: 20px;
-        }
-        
-        .stat-item {
-            text-align: center;
-        }
-        
-        .stat-number {
-            font-size: 24px;
-            font-weight: bold;
-            color: #667eea;
-        }
-        
-        .stat-label {
-            font-size: 11px;
-            color: #aaa;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        /* Node and link styles */
-        .node {
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .node:hover {
-            filter: brightness(1.3);
-        }
-        
-        .node circle {
-            stroke-width: 3px;
-            stroke: rgba(255, 255, 255, 0.3);
-        }
-        
-        .node.critical circle {
-            stroke: #f5576c;
-            stroke-width: 4px;
-        }
-        
-        .node.selected circle {
-            stroke: #fff;
-            stroke-width: 5px;
-        }
-        
-        .node text {
-            font-size: 11px;
-            fill: #eee;
-            text-anchor: middle;
-            pointer-events: none;
-            text-shadow: 0 0 3px rgba(0, 0, 0, 0.8);
-        }
-        
-        .link {
-            stroke: rgba(102, 126, 234, 0.4);
-            stroke-width: 2px;
-            fill: none;
-        }
-        
-        .link.critical {
-            stroke: rgba(245, 87, 108, 0.6);
-            stroke-width: 3px;
-        }
-        
-        .link-label {
-            font-size: 10px;
-            fill: #aaa;
-            text-anchor: middle;
-            pointer-events: none;
-        }
-        
-        .milestone-cluster {
-            fill: none;
-            stroke: rgba(102, 126, 234, 0.2);
-            stroke-width: 2px;
-            stroke-dasharray: 5, 5;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WBS Network Graph - Digital Democracy Platform</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d1117;color:#c9d1d9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;overflow:hidden}
+#ctl{position:fixed;top:0;left:0;right:0;z-index:100;background:rgba(13,17,23,.95);border-bottom:1px solid #30363d;padding:8px 16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+#ctl label{font-size:12px;color:#8b949e}
+#ctl select,#ctl input[type=text]{background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:4px 8px;border-radius:6px;font-size:12px}
+#ctl input[type=text]{width:160px}
+#ctl button{background:#238636;border:none;color:#fff;padding:4px 12px;border-radius:6px;cursor:pointer;font-size:12px}
+#ctl button:hover{background:#2ea043}
+#ctl button.s{background:#30363d}
+#ctl button.s:hover{background:#484f58}
+#ctl button.on{background:#1f6feb}
+#ip{position:fixed;bottom:16px;right:16px;z-index:200;background:rgba(22,27,34,.97);border:1px solid #30363d;border-radius:10px;padding:14px;width:400px;display:none;font-size:12px;max-height:80vh;overflow-y:auto}
+#ip h3{color:#58a6ff;margin-bottom:6px;font-size:14px}
+#ip .f{margin-bottom:5px}
+#ip .l{color:#8b949e}
+#ip .v{color:#c9d1d9}
+#ip .x{position:absolute;top:6px;right:10px;cursor:pointer;color:#8b949e;font-size:16px}
+#ip .x:hover{color:#fff}
+#ip button{background:#238636;border:none;color:#fff;padding:3px 10px;border-radius:4px;cursor:pointer;font-size:11px;margin:2px}
+#ip button.s{background:#30363d}
+#ip button.warn{background:#da3633}
+#ip input,#ip select,#ip textarea{background:#161b22;border:1px solid #30363d;color:#c9d1d9;padding:3px 6px;border-radius:4px;font-size:11px;width:100%}
+#ip textarea{resize:vertical;min-height:40px}
+#ip .edit-row{display:flex;gap:6px;align-items:center;margin:3px 0}
+#ip .edit-row label{min-width:70px;color:#8b949e;font-size:11px}
+#ip .edit-row input,#ip .edit-row select,#ip .edit-row textarea{flex:1}
+.conn-item{background:#161b22;border:1px solid #30363d;border-radius:4px;padding:4px 6px;margin:2px 0;font-size:10px;display:flex;justify-content:space-between;align-items:center}
+.conn-item .rm{color:#da3633;cursor:pointer;font-size:12px;margin-left:4px}
+#overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);z-index:300;display:none;justify-content:center;align-items:center}
+#modal{background:#161b22;border:1px solid #30363d;border-radius:10px;padding:20px;width:420px;max-height:80vh;overflow-y:auto;font-size:12px}
+#modal h3{color:#58a6ff;margin-bottom:10px}
+#modal .edit-row{display:flex;gap:6px;align-items:center;margin:5px 0}
+#modal .edit-row label{min-width:80px;color:#8b949e;font-size:11px}
+#modal .edit-row input,#modal .edit-row select,#modal .edit-row textarea{flex:1;background:#0d1117;border:1px solid #30363d;color:#c9d1d9;padding:4px 6px;border-radius:4px;font-size:11px}
+#modal button{background:#238636;border:none;color:#fff;padding:5px 14px;border-radius:4px;cursor:pointer;font-size:12px;margin:2px}
+#modal button.s{background:#30363d}
+#modal button.warn{background:#da3633}
+</style>
 </head>
 <body>
-    <div id="container">
-        <svg id="graph"></svg>
-        
-        <div class="controls">
-            <h2>🎛️ Controls</h2>
-            
-            <div class="control-group">
-                <label>View Mode</label>
-                <select id="viewMode">
-                    <option value="all">All Tasks</option>
-                    <option value="critical">Critical Path Only</option>
-                    <option value="milestone1">Milestone 1</option>
-                    <option value="milestone2">Milestone 2</option>
-                    <option value="milestone3">Milestone 3</option>
-                    <option value="milestone4">Milestone 4</option>
-                    <option value="milestone5">Milestone 5</option>
-                    <option value="milestone6">Milestone 6</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label>Agent Filter</label>
-                <select id="agentFilter">
-                    <option value="all">All Agents</option>
-                    <option value="ARCH">ARCH</option>
-                    <option value="DEV">DEV</option>
-                    <option value="CRYPTO">CRYPTO</option>
-                    <option value="DEVOPS">DEVOPS</option>
-                    <option value="UX">UX</option>
-                    <option value="SEC">SEC</option>
-                    <option value="QA">QA</option>
-                </select>
-            </div>
-            
-            <div class="control-group">
-                <label>Node Size</label>
-                <input type="range" id="nodeSize" min="10" max="50" value="25">
-            </div>
-            
-            <div class="control-group">
-                <label>Link Strength</label>
-                <input type="range" id="linkStrength" min="0.1" max="2" step="0.1" value="0.5">
-            </div>
-        </div>
-        
-        <div class="legend">
-            <h3>📊 Milestones</h3>
-            <div class="legend-item">
-                <div class="legend-color" style="background: #667eea;"></div>
-                <span>Foundation & Setup</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: #764ba2;"></div>
-                <span>Platform Customization</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: #f093fb;"></div>
-                <span>Cryptographic Voting</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: #4facfe;"></div>
-                <span>Censorship Resistance</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: #43e97b;"></div>
-                <span>Security & Testing</span>
-            </div>
-            <div class="legend-item">
-                <div class="legend-color" style="background: #f5576c;"></div>
-                <span>Documentation & Launch</span>
-            </div>
-        </div>
-        
-        <div class="info-panel" id="infoPanel">
-            <button class="close-btn" onclick="closeInfo()">&times;</button>
-            <h3 id="infoTitle">Task Details</h3>
-            <div id="infoContent"></div>
-        </div>
-        
-        <div class="stats">
-            <div class="stat-item">
-                <div class="stat-number" id="visibleNodes">0</div>
-                <div class="stat-label">Visible Tasks</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="visibleLinks">0</div>
-                <div class="stat-label">Dependencies</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-number" id="totalHours">0</div>
-                <div class="stat-label">Total Hours</div>
-            </div>
-        </div>
+<div id="ctl">
+  <label>Milestone:</label>
+  <select id="mf"><option value="all">All</option><option value="1">M1</option><option value="2">M2</option><option value="3">M3</option><option value="4">M4</option><option value="5">M5</option><option value="6">M6</option></select>
+  <label>Agent:</label>
+  <select id="af"><option value="all">All</option><option value="DEV">DEV</option><option value="ARCH">ARCH</option><option value="CRYPTO">CRYPTO</option><option value="DEVOPS">DEVOPS</option><option value="UX">UX</option><option value="SEC">SEC</option><option value="QA">QA</option></select>
+  <label>Search:</label>
+  <input type="text" id="sb" placeholder="Node ID or name...">
+  <button onclick="resetView()">Reset</button>
+  <button class="s" id="physBtn" onclick="togglePhysics()">Physics: ON</button>
+  <button class="s" onclick="centerGraph()">Center</button>
+  <button class="s" id="indBtn" onclick="toggleIndirect()">Indirect: OFF</button>
+  <button onclick="showAddNode()">+ Node</button>
+</div>
+<div id="lg" style="position:fixed;bottom:16px;left:16px;z-index:100;background:rgba(22,27,34,.95);border:1px solid #30363d;border-radius:10px;padding:10px 14px;font-size:11px">
+  <div style="display:flex;align-items:center;gap:6px;margin:3px 0"><div style="width:10px;height:10px;border-radius:50%;background:#f97583"></div>M1: Foundation</div>
+  <div style="display:flex;align-items:center;gap:6px;margin:3px 0"><div style="width:10px;height:10px;border-radius:50%;background:#d2a8ff"></div>M2: Core Platform</div>
+  <div style="display:flex;align-items:center;gap:6px;margin:3px 0"><div style="width:10px;height:10px;border-radius:50%;background:#79c0ff"></div>M3: Crypto Voting</div>
+  <div style="display:flex;align-items:center;gap:6px;margin:3px 0"><div style="width:10px;height:10px;border-radius:50%;background:#56d364"></div>M4: Censorship Resist.</div>
+  <div style="display:flex;align-items:center;gap:6px;margin:3px 0"><div style="width:10px;height:10px;border-radius:50%;background:#e3b341"></div>M5: Security & Testing</div>
+  <div style="display:flex;align-items:center;gap:6px;margin:3px 0"><div style="width:10px;height:10px;border-radius:50%;background:#ff7b72"></div>M6: Docs & Launch</div>
+  <div style="margin-top:4px;color:#8b949e;font-size:10px">● start ◆ merge ★ end<br>── direct ┈┈ indirect</div>
+</div>
+<div id="st" style="position:fixed;top:48px;right:16px;z-index:100;background:rgba(22,27,34,.95);border:1px solid #30363d;border-radius:10px;padding:8px 12px;font-size:11px;color:#8b949e"></div>
+<div id="ip"><span class="x" onclick="closePanel()">&times;</span><div id="ib"></div></div>
+<div id="overlay" onclick="closeModal(event)"><div id="modal"></div></div>
+<svg style="width:100vw;height:100vh"></svg>
+<script src="https://d3js.org/d3.v7.min.js"></script>
+<script>
+// === CONSTANTS ===
+const MC={1:"#f97583",2:"#d2a8ff",3:"#79c0ff",4:"#56d364",5:"#e3b341",6:"#ff7b72"};
+const MN={1:"Foundation & Setup",2:"Core Platform",3:"Crypto Voting",4:"Censorship Resistance",5:"Security & Testing",6:"Docs & Launch"};
+const AGENTS=["DEV","ARCH","CRYPTO","DEVOPS","UX","SEC","QA"];
+
+// === NODE DATA (119 nodes) ===
+let nodes=[
+{id:"1.1.1",name:"Repository Setup",agent:"DEV",hours:4,parent:"1.1"},
+{id:"1.1.2",name:"Dev Environment Config",agent:"DEV",hours:6,parent:"1.1"},
+{id:"1.1.3",name:"CI/CD Pipeline Setup",agent:"DEVOPS",hours:8,parent:"1.1"},
+{id:"1.1.4",name:"Project Documentation Structure",agent:"ARCH",hours:4,parent:"1.1"},
+{id:"1.2.1",name:"Platform Evaluation",agent:"ARCH",hours:6,parent:"1.2"},
+{id:"1.2.2",name:"Cryptographic Library Selection",agent:"CRYPTO",hours:8,parent:"1.2"},
+{id:"1.2.3",name:"Biometric Library Selection",agent:"DEV",hours:6,parent:"1.2"},
+{id:"1.2.4",name:"Architecture Documentation",agent:"ARCH",hours:6,parent:"1.2"},
+{id:"1.3.1",name:"VPS Selection and Setup",agent:"DEVOPS",hours:4,parent:"1.3"},
+{id:"1.3.2",name:"OS Hardening",agent:"DEVOPS",hours:6,parent:"1.3"},
+{id:"1.3.3",name:"Tor Hidden Service Config",agent:"DEVOPS",hours:8,parent:"1.3"},
+{id:"1.3.4",name:"Database Setup",agent:"DEVOPS",hours:6,parent:"1.3"},
+{id:"1.3.5",name:"SSL/TLS Configuration",agent:"DEVOPS",hours:4,parent:"1.3"},
+{id:"1.4.1",name:"Repository Forking",agent:"DEV",hours:2,parent:"1.4"},
+{id:"1.4.2",name:"Local Development Setup",agent:"DEV",hours:8,parent:"1.4"},
+{id:"1.4.3",name:"Test Suite Verification",agent:"QA",hours:6,parent:"1.4"},
+{id:"1.4.4",name:"Customization Planning",agent:"ARCH",hours:6,parent:"1.4"},
+{id:"2.1.1",name:"Persian Language Pack",agent:"UX",hours:12,parent:"2.1"},
+{id:"2.1.2",name:"Custom Theme Development",agent:"UX",hours:8,parent:"2.1"},
+{id:"2.1.3",name:"UI Simplification",agent:"UX",hours:8,parent:"2.1"},
+{id:"2.2.1",name:"Registration Form Development",agent:"DEV",hours:8,parent:"2.2"},
+{id:"2.2.2",name:"Email Verification System",agent:"DEV",hours:8,parent:"2.2"},
+{id:"2.2.3",name:"Social Vouching DB Schema",agent:"DEV",hours:6,parent:"2.2"},
+{id:"2.2.4",name:"Vouching Request System",agent:"DEV",hours:10,parent:"2.2"},
+{id:"2.2.5",name:"Admin Vouching Oversight",agent:"DEV",hours:8,parent:"2.2"},
+{id:"2.2.6",name:"User Profile Management",agent:"DEV",hours:8,parent:"2.2"},
+{id:"2.3.1",name:"TOTP Library Integration",agent:"DEV",hours:6,parent:"2.3"},
+{id:"2.3.2",name:"QR Code Generation",agent:"DEV",hours:4,parent:"2.3"},
+{id:"2.3.3",name:"Backup Codes System",agent:"DEV",hours:6,parent:"2.3"},
+{id:"2.3.4",name:"2FA Login Flow",agent:"DEV",hours:6,parent:"2.3"},
+{id:"2.4.1",name:"Face Detection Library Integration",agent:"DEV",hours:8,parent:"2.4"},
+{id:"2.4.2",name:"Liveness Detection Implementation",agent:"DEV",hours:12,parent:"2.4"},
+{id:"2.4.3",name:"Face Embedding Generation",agent:"DEV",hours:10,parent:"2.4"},
+{id:"2.4.4",name:"Duplicate Detection System",agent:"DEV",hours:12,parent:"2.4"},
+{id:"2.4.5",name:"Privacy-Preserving Architecture",agent:"SEC",hours:8,parent:"2.4"},
+{id:"2.4.6",name:"Biometric Signup Flow",agent:"DEV",hours:10,parent:"2.4"},
+{id:"3.1.1",name:"Helios System Analysis",agent:"CRYPTO",hours:8,parent:"3.1"},
+{id:"3.1.2",name:"API Bridge Design",agent:"ARCH",hours:10,parent:"3.1"},
+{id:"3.1.3",name:"Data Flow Mapping",agent:"ARCH",hours:8,parent:"3.1"},
+{id:"3.1.4",name:"Cryptographic Key Management",agent:"CRYPTO",hours:8,parent:"3.1"},
+{id:"3.2.1",name:"Helios Installation",agent:"DEVOPS",hours:8,parent:"3.2"},
+{id:"3.2.2",name:"Helios Containerization",agent:"DEVOPS",hours:6,parent:"3.2"},
+{id:"3.2.3",name:"Election Trustee Setup",agent:"CRYPTO",hours:10,parent:"3.2"},
+{id:"3.2.4",name:"ElGamal Parameter Config",agent:"CRYPTO",hours:6,parent:"3.2"},
+{id:"3.2.5",name:"Test Election Execution",agent:"CRYPTO",hours:8,parent:"3.2"},
+{id:"3.3.1",name:"API Authentication Layer",agent:"DEV",hours:8,parent:"3.3"},
+{id:"3.3.2",name:"Vote Creation Endpoint",agent:"DEV",hours:10,parent:"3.3"},
+{id:"3.3.3",name:"Vote Casting Endpoint",agent:"DEV",hours:12,parent:"3.3"},
+{id:"3.3.4",name:"Vote Verification Endpoint",agent:"DEV",hours:8,parent:"3.3"},
+{id:"3.3.5",name:"Tallying Trigger Mechanism",agent:"DEV",hours:8,parent:"3.3"},
+{id:"3.3.6",name:"Error Handling and Logging",agent:"DEV",hours:6,parent:"3.3"},
+{id:"3.4.1",name:"Vote Creation Interface",agent:"UX",hours:10,parent:"3.4"},
+{id:"3.4.2",name:"Vote Listing Page",agent:"DEV",hours:6,parent:"3.4"},
+{id:"3.4.3",name:"Ballot Interface",agent:"UX",hours:12,parent:"3.4"},
+{id:"3.4.4",name:"Vote Verification Page",agent:"DEV",hours:8,parent:"3.4"},
+{id:"3.4.5",name:"Results Dashboard",agent:"UX",hours:10,parent:"3.4"},
+{id:"3.4.6",name:"Mobile Responsive Design",agent:"UX",hours:6,parent:"3.4"},
+{id:"3.5.1",name:"Anonymization Architecture",agent:"CRYPTO",hours:8,parent:"3.5"},
+{id:"3.5.2",name:"Identity-Vote DB Separation",agent:"DEV",hours:10,parent:"3.5"},
+{id:"3.5.3",name:"Audit Log Implementation",agent:"DEV",hours:8,parent:"3.5"},
+{id:"3.5.4",name:"Privacy Policy Documentation",agent:"SEC",hours:6,parent:"3.5"},
+{id:"4.1.1",name:"Tor Config Optimization",agent:"DEVOPS",hours:6,parent:"4.1"},
+{id:"4.1.2",name:"DoS Protection Implementation",agent:"DEVOPS",hours:8,parent:"4.1"},
+{id:"4.1.3",name:"Tor Browser Compatibility Testing",agent:"QA",hours:4,parent:"4.1"},
+{id:"4.1.4",name:"Onion Address Publication",agent:"DEVOPS",hours:4,parent:"4.1"},
+{id:"4.2.1",name:"Cloudflare Account Setup",agent:"DEVOPS",hours:4,parent:"4.2"},
+{id:"4.2.2",name:"Domain Fronting Config",agent:"DEVOPS",hours:10,parent:"4.2"},
+{id:"4.2.3",name:"CDN Optimization",agent:"DEVOPS",hours:6,parent:"4.2"},
+{id:"4.2.4",name:"Censorship Circumvention Testing",agent:"SEC",hours:8,parent:"4.2"},
+{id:"4.3.1",name:"IPFS Node Installation",agent:"DEVOPS",hours:6,parent:"4.3"},
+{id:"4.3.2",name:"Static Asset Upload to IPFS",agent:"DEVOPS",hours:8,parent:"4.3"},
+{id:"4.3.3",name:"IPFS Gateway Config",agent:"DEVOPS",hours:8,parent:"4.3"},
+{id:"4.3.4",name:"Platform Integration with IPFS",agent:"DEV",hours:10,parent:"4.3"},
+{id:"4.3.5",name:"IPFS Content Pinning Strategy",agent:"DEVOPS",hours:6,parent:"4.3"},
+{id:"4.4.1",name:"Circumvention Tool Research",agent:"SEC",hours:6,parent:"4.4"},
+{id:"4.4.2",name:"Circumvention Guide (Persian)",agent:"UX",hours:8,parent:"4.4"},
+{id:"4.4.3",name:"Circumvention Guide (English)",agent:"UX",hours:4,parent:"4.4"},
+{id:"5.1.1",name:"OWASP Top 10 Testing",agent:"SEC",hours:12,parent:"5.1"},
+{id:"5.1.2",name:"Crypto Implementation Review",agent:"CRYPTO",hours:10,parent:"5.1"},
+{id:"5.1.3",name:"Auth & Authorization Testing",agent:"SEC",hours:8,parent:"5.1"},
+{id:"5.1.4",name:"Information Leakage Testing",agent:"SEC",hours:6,parent:"5.1"},
+{id:"5.1.5",name:"Vulnerability Remediation",agent:"DEV",hours:12,parent:"5.1"},
+{id:"5.1.6",name:"Security Audit Report",agent:"SEC",hours:6,parent:"5.1"},
+{id:"5.2.1",name:"Photo Spoofing Tests",agent:"SEC",hours:8,parent:"5.2"},
+{id:"5.2.2",name:"Video Spoofing Tests",agent:"SEC",hours:8,parent:"5.2"},
+{id:"5.2.3",name:"Liveness Detection Effectiveness",agent:"SEC",hours:8,parent:"5.2"},
+{id:"5.2.4",name:"Duplicate Detection Accuracy",agent:"SEC",hours:8,parent:"5.2"},
+{id:"5.3.1",name:"Load Testing Environment Setup",agent:"QA",hours:4,parent:"5.3"},
+{id:"5.3.2",name:"Concurrent User Simulation",agent:"QA",hours:8,parent:"5.3"},
+{id:"5.3.3",name:"Vote Casting Load Test",agent:"QA",hours:6,parent:"5.3"},
+{id:"5.3.4",name:"DB Query Optimization",agent:"DEV",hours:6,parent:"5.3"},
+{id:"5.4.1",name:"Test Suite Development",agent:"QA",hours:12,parent:"5.4"},
+{id:"5.4.2",name:"Edge Case Testing",agent:"QA",hours:10,parent:"5.4"},
+{id:"5.4.3",name:"Browser Compatibility Testing",agent:"QA",hours:8,parent:"5.4"},
+{id:"5.4.4",name:"Continuous Testing Setup",agent:"DEVOPS",hours:6,parent:"5.4"},
+{id:"5.4.5",name:"Bug Tracking System",agent:"QA",hours:4,parent:"5.4"},
+{id:"6.1.1",name:"User Guide (Persian)",agent:"UX",hours:12,parent:"6.1"},
+{id:"6.1.2",name:"User Guide (English)",agent:"UX",hours:6,parent:"6.1"},
+{id:"6.1.3",name:"Video Tutorial Creation",agent:"UX",hours:10,parent:"6.1"},
+{id:"6.1.4",name:"FAQ Development",agent:"UX",hours:6,parent:"6.1"},
+{id:"6.2.1",name:"Admin Manual Writing",agent:"ARCH",hours:10,parent:"6.2"},
+{id:"6.2.2",name:"Deployment Guide",agent:"DEVOPS",hours:8,parent:"6.2"},
+{id:"6.2.3",name:"Troubleshooting Guide",agent:"DEVOPS",hours:6,parent:"6.2"},
+{id:"6.2.4",name:"Backup & Recovery Docs",agent:"DEVOPS",hours:6,parent:"6.2"},
+{id:"6.3.1",name:"Privacy Policy Writing",agent:"SEC",hours:8,parent:"6.3"},
+{id:"6.3.2",name:"Security Whitepaper",agent:"CRYPTO",hours:10,parent:"6.3"},
+{id:"6.3.3",name:"Threat Model Documentation",agent:"SEC",hours:6,parent:"6.3"},
+{id:"6.3.4",name:"Transparency Report Template",agent:"ARCH",hours:4,parent:"6.3"},
+{id:"6.4.1",name:"Beta Tester Recruitment",agent:"UX",hours:8,parent:"6.4"},
+{id:"6.4.2",name:"Beta Onboarding",agent:"UX",hours:10,parent:"6.4"},
+{id:"6.4.3",name:"Test Vote Execution",agent:"QA",hours:12,parent:"6.4"},
+{id:"6.4.4",name:"Feedback Collection",agent:"UX",hours:8,parent:"6.4"},
+{id:"6.4.5",name:"Bug Fixes & Improvements",agent:"DEV",hours:12,parent:"6.4"},
+{id:"6.5.1",name:"Production Environment Final",agent:"DEVOPS",hours:8,parent:"6.5"},
+{id:"6.5.2",name:"Monitoring & Alerting Setup",agent:"DEVOPS",hours:10,parent:"6.5"},
+{id:"6.5.3",name:"Incident Response Plan",agent:"SEC",hours:8,parent:"6.5"},
+{id:"6.5.4",name:"Launch Announcement Prep",agent:"UX",hours:6,parent:"6.5"},
+{id:"6.5.5",name:"Final Pre-Launch Checklist",agent:"QA",hours:6,parent:"6.5"},
+{id:"6.5.6",name:"Launch Execution",agent:"DEV",hours:4,parent:"6.5"}
+];
+
+// === DIRECT EDGES (118) ===
+let edges=[
+["1.1.1","1.1.2"],["1.1.2","1.4.2"],["1.1.3","1.3.1"],["1.1.4","1.2.1"],
+["1.2.1","1.2.2"],["1.2.2","1.2.3"],["1.2.3","1.2.4"],["1.2.4","1.4.1"],
+["1.3.1","1.3.2"],["1.3.2","1.3.3"],["1.3.3","1.3.4"],["1.3.4","1.3.5"],["1.3.5","4.1.1"],
+["1.4.1","1.4.2"],["1.4.2","1.4.3"],["1.4.3","1.4.4"],["1.4.4","2.1.1"],
+["2.1.1","2.1.3"],["2.1.2","2.1.3"],["2.1.3","2.2.1"],
+["2.2.1","2.2.2"],["2.2.2","2.2.3"],["2.2.3","2.2.4"],["2.2.4","2.2.5"],["2.2.5","2.3.1"],["2.2.6","2.3.1"],
+["2.3.1","2.3.2"],["2.3.2","2.3.3"],["2.3.3","2.3.4"],["2.3.4","5.1.1"],
+["2.4.1","2.4.2"],["2.4.2","2.4.3"],["2.4.3","2.4.4"],["2.4.4","2.4.5"],["2.4.5","2.4.6"],["2.4.6","5.2.1"],
+["3.1.1","3.1.2"],["3.1.2","3.1.3"],["3.1.3","3.1.4"],["3.1.4","3.2.1"],
+["3.2.1","3.2.2"],["3.2.2","3.2.3"],["3.2.3","3.2.4"],["3.2.4","3.2.5"],["3.2.5","3.3.1"],
+["3.3.1","3.3.2"],["3.3.2","3.3.3"],["3.3.3","3.3.4"],["3.3.4","3.3.5"],["3.3.5","3.3.6"],["3.3.6","3.4.1"],
+["3.4.1","3.4.2"],["3.4.2","3.4.3"],["3.4.3","3.4.4"],["3.4.4","3.4.5"],["3.4.5","3.5.1"],["3.4.6","3.5.1"],
+["3.5.1","3.5.2"],["3.5.2","3.5.3"],["3.5.3","5.1.1"],["3.5.4","6.3.1"],
+["4.1.1","4.1.2"],["4.1.2","4.1.4"],["4.1.3","4.1.4"],["4.1.4","4.2.1"],
+["4.2.1","4.2.2"],["4.2.2","4.2.3"],["4.2.3","4.3.1"],["4.2.4","4.3.1"],
+["4.3.1","4.3.2"],["4.3.2","4.3.3"],["4.3.3","4.3.4"],["4.3.4","4.3.5"],["4.3.5","6.5.1"],
+["4.4.1","4.4.2"],["4.4.2","4.4.3"],["4.4.3","6.1.1"],
+["5.1.1","5.1.2"],["5.1.2","5.1.3"],["5.1.3","5.1.4"],["5.1.4","5.1.5"],["5.1.5","5.1.6"],["5.1.6","5.4.1"],
+["5.2.1","5.2.2"],["5.2.2","5.2.3"],["5.2.3","5.2.4"],["5.2.4","5.4.1"],
+["5.3.1","5.3.2"],["5.3.2","5.3.3"],["5.3.3","5.3.4"],["5.3.4","5.4.1"],
+["5.4.1","5.4.2"],["5.4.2","5.4.3"],["5.4.3","5.4.5"],["5.4.4","6.5.1"],["5.4.5","6.1.1"],
+["6.1.1","6.1.2"],["6.1.2","6.4.2"],["6.1.3","6.4.2"],["6.1.4","6.4.1"],
+["6.2.1","6.2.2"],["6.2.2","6.2.3"],["6.2.3","6.2.4"],["6.2.4","6.5.5"],
+["6.3.1","6.3.2"],["6.3.2","6.3.3"],["6.3.3","6.3.4"],["6.3.4","6.5.5"],
+["6.4.1","6.4.2"],["6.4.2","6.4.3"],["6.4.3","6.4.4"],["6.4.4","6.4.5"],["6.4.5","6.5.1"],
+["6.5.1","6.5.2"],["6.5.2","6.5.5"],["6.5.3","6.5.5"],["6.5.4","6.5.5"],["6.5.5","6.5.6"]
+];
+
+// === DEPENDENCY REASONS (118 direct edges) ===
+const DR={
+"1.1.1>1.1.2":"Need repository before configuring development environment",
+"1.1.2>1.4.2":"Docker dev environment needed for local CONSUL setup",
+"1.1.3>1.3.1":"CI/CD pipeline informs VPS requirements and deployment target",
+"1.1.4>1.2.1":"Documentation structure guides platform evaluation criteria",
+"1.2.1>1.2.2":"Platform choice determines which crypto libraries are compatible",
+"1.2.2>1.2.3":"Crypto library choice constrains biometric library options",
+"1.2.3>1.2.4":"All library selections must be finalized before architecture docs",
+"1.2.4>1.4.1":"Architecture must be documented before forking and customizing CONSUL",
+"1.3.1>1.3.2":"VPS must be provisioned before OS can be hardened",
+"1.3.2>1.3.3":"OS must be hardened before exposing Tor service",
+"1.3.3>1.3.4":"Tor config affects database network access settings",
+"1.3.4>1.3.5":"Database must be running before configuring SSL for web layer",
+"1.3.5>4.1.1":"SSL/TLS must be configured before optimizing Tor hidden service",
+"1.4.1>1.4.2":"Must fork repo before setting up local development",
+"1.4.2>1.4.3":"Local setup must work before running test suite",
+"1.4.3>1.4.4":"Test results inform customization planning decisions",
+"1.4.4>2.1.1":"Customization plan must exist before starting localization",
+"2.1.1>2.1.3":"Persian language pack needed before simplifying UI (RTL affects layout)",
+"2.1.2>2.1.3":"Theme must exist before UI simplification can be applied",
+"2.1.3>2.2.1":"Simplified UI framework needed before building registration forms",
+"2.2.1>2.2.2":"Registration form must exist before adding email verification",
+"2.2.2>2.2.3":"Email verification flow informs vouching schema design",
+"2.2.3>2.2.4":"Vouching DB schema must exist before building request system",
+"2.2.4>2.2.5":"Vouching request system must work before building admin oversight",
+"2.2.5>2.3.1":"Vouching oversight complete before adding 2FA layer",
+"2.2.6>2.3.1":"User profiles must exist before 2FA can be attached to accounts",
+"2.3.1>2.3.2":"TOTP library must be integrated before generating QR codes",
+"2.3.2>2.3.3":"QR setup flow must work before adding backup codes alternative",
+"2.3.3>2.3.4":"Backup codes must exist as fallback before building 2FA login flow",
+"2.3.4>5.1.1":"2FA login flow must be complete before security audit can test it",
+"2.4.1>2.4.2":"Face detection must work before adding liveness challenges",
+"2.4.2>2.4.3":"Liveness detection validates face before generating embeddings",
+"2.4.3>2.4.4":"Face embeddings must be generated before duplicate detection",
+"2.4.4>2.4.5":"Duplicate detection design informs privacy architecture decisions",
+"2.4.5>2.4.6":"Privacy architecture must be defined before building signup flow",
+"2.4.6>5.2.1":"Biometric signup must be complete before spoofing tests",
+"3.1.1>3.1.2":"Helios analysis informs API bridge design decisions",
+"3.1.2>3.1.3":"API bridge design determines data flow requirements",
+"3.1.3>3.1.4":"Data flow mapping reveals key management requirements",
+"3.1.4>3.2.1":"Key management plan needed before Helios deployment",
+"3.2.1>3.2.2":"Helios must be installed before containerizing it",
+"3.2.2>3.2.3":"Containerized Helios needed before configuring trustees",
+"3.2.3>3.2.4":"Trustee setup must work before configuring ElGamal params",
+"3.2.4>3.2.5":"ElGamal params must be set before running test election",
+"3.2.5>3.3.1":"Test election validates Helios before building API bridge",
+"3.3.1>3.3.2":"API auth layer must exist before vote creation endpoint",
+"3.3.2>3.3.3":"Vote creation must work before vote casting can be built",
+"3.3.3>3.3.4":"Vote casting must work before verification endpoint",
+"3.3.4>3.3.5":"Verification must work before tallying trigger",
+"3.3.5>3.3.6":"Core API must work before adding error handling layer",
+"3.3.6>3.4.1":"API must be stable with error handling before building UI",
+"3.4.1>3.4.2":"Vote creation UI informs vote listing page design",
+"3.4.2>3.4.3":"Vote listing must exist before ballot interface",
+"3.4.3>3.4.4":"Ballot interface must work before verification page",
+"3.4.4>3.4.5":"Verification page must exist before results dashboard",
+"3.4.5>3.5.1":"Results dashboard complete before anonymization design",
+"3.4.6>3.5.1":"Mobile responsive issues inform anonymization UI design",
+"3.5.1>3.5.2":"Anonymization architecture must be designed before DB separation",
+"3.5.2>3.5.3":"DB separation must be done before audit log implementation",
+"3.5.3>5.1.1":"Audit log must exist before security audit can review it",
+"3.5.4>6.3.1":"Privacy policy docs feed into formal privacy policy writing",
+"4.1.1>4.1.2":"Tor config must be optimized before adding DoS protection",
+"4.1.2>4.1.4":"DoS protection must be in place before publishing onion address",
+"4.1.3>4.1.4":"Browser compatibility must be verified before publishing address",
+"4.1.4>4.2.1":"Onion address published before setting up domain fronting alternative",
+"4.2.1>4.2.2":"Cloudflare account needed before domain fronting config",
+"4.2.2>4.2.3":"Domain fronting must work before CDN optimization",
+"4.2.3>4.3.1":"CDN setup informs IPFS node configuration",
+"4.2.4>4.3.1":"Circumvention test results inform IPFS deployment strategy",
+"4.3.1>4.3.2":"IPFS node must be running before uploading assets",
+"4.3.2>4.3.3":"Assets must be on IPFS before configuring gateway",
+"4.3.3>4.3.4":"Gateway must work before platform integration",
+"4.3.4>4.3.5":"Platform integration must work before pinning strategy",
+"4.3.5>6.5.1":"IPFS pinning must be configured before production finalization",
+"4.4.1>4.4.2":"Tool research must be done before writing Persian guide",
+"4.4.2>4.4.3":"Persian guide must exist before English translation",
+"4.4.3>6.1.1":"Circumvention guides must exist before user guide references them",
+"5.1.1>5.1.2":"OWASP testing must be done before crypto review",
+"5.1.2>5.1.3":"Crypto review before auth testing (crypto informs auth)",
+"5.1.3>5.1.4":"Auth testing before info leakage testing",
+"5.1.4>5.1.5":"All vulnerability findings needed before remediation",
+"5.1.5>5.1.6":"Remediation must be done before writing audit report",
+"5.1.6>5.4.1":"Audit report must exist before E2E test suite development",
+"5.2.1>5.2.2":"Photo spoofing tests before video spoofing tests",
+"5.2.2>5.2.3":"Video spoofing results inform liveness detection tuning",
+"5.2.3>5.2.4":"Liveness effectiveness informs duplicate detection thresholds",
+"5.2.4>5.4.1":"Biometric testing complete before E2E test suite",
+"5.3.1>5.3.2":"Load test environment must be set up before running simulations",
+"5.3.2>5.3.3":"Concurrent user results inform vote casting load test design",
+"5.3.3>5.3.4":"Load test results reveal which DB queries need optimization",
+"5.3.4>5.4.1":"DB optimization must be done before E2E testing",
+"5.4.1>5.4.2":"Test suite must exist before edge case testing",
+"5.4.2>5.4.3":"Edge cases must be tested before browser compatibility",
+"5.4.3>5.4.5":"Browser compat issues must be found before bug tracking setup",
+"5.4.4>6.5.1":"CI/CD testing setup must be done before production finalization",
+"5.4.5>6.1.1":"Bug tracking must be set up before writing user guide (known issues)",
+"6.1.1>6.1.2":"Persian user guide must exist before English translation",
+"6.1.2>6.4.2":"English guide needed for beta onboarding materials",
+"6.1.3>6.4.2":"Video tutorials needed for beta onboarding",
+"6.1.4>6.4.1":"FAQ must exist before recruiting beta testers (they need resources)",
+"6.2.1>6.2.2":"Admin manual must exist before deployment guide",
+"6.2.2>6.2.3":"Deployment guide informs troubleshooting guide content",
+"6.2.3>6.2.4":"Troubleshooting guide informs backup/recovery docs",
+"6.2.4>6.5.5":"Backup docs must exist before pre-launch checklist",
+"6.3.1>6.3.2":"Privacy policy must exist before security whitepaper references it",
+"6.3.2>6.3.3":"Whitepaper informs threat model documentation",
+"6.3.3>6.3.4":"Threat model must exist before transparency report template",
+"6.3.4>6.5.5":"Transparency report template needed for pre-launch checklist",
+"6.4.1>6.4.2":"Beta testers must be recruited before onboarding them",
+"6.4.2>6.4.3":"Onboarding must be done before test vote execution",
+"6.4.3>6.4.4":"Test votes must be executed before collecting feedback",
+"6.4.4>6.4.5":"Feedback must be collected before fixing bugs",
+"6.4.5>6.5.1":"Beta bug fixes must be done before production finalization",
+"6.5.1>6.5.2":"Production env must be finalized before monitoring setup",
+"6.5.2>6.5.5":"Monitoring must be active before pre-launch checklist",
+"6.5.3>6.5.5":"Incident response plan needed for pre-launch checklist",
+"6.5.4>6.5.5":"Launch announcement must be ready for pre-launch checklist",
+"6.5.5>6.5.6":"Pre-launch checklist must pass before launch execution"
+};
+
+// === INDIRECT CONNECTIONS (19 curated cross-branch thematic) ===
+let indirectEdges=[
+["2.4.5","3.5.4","Both deal with privacy architecture — biometric privacy design should align with vote privacy policy"],
+["2.4.4","5.2.4","Duplicate detection design directly affects duplicate detection testing accuracy thresholds"],
+["2.4.2","5.2.2","Liveness detection implementation determines what video spoofing tests should target"],
+["1.3.3","4.1.1","Tor hidden service config and Tor optimization share the same torrc — changes affect both"],
+["2.2.3","3.5.2","Social vouching DB schema and identity-vote DB separation both affect user anonymity design"],
+["3.2.4","5.1.2","ElGamal parameters directly affect what crypto implementation review should verify"],
+["1.2.2","3.1.1","Cryptographic library selection determines Helios integration approach"],
+["1.2.3","2.4.1","Biometric library selection determines face detection implementation"],
+["4.2.4","4.1.3","Censorship circumvention testing and Tor browser testing share test infrastructure"],
+["5.1.3","2.3.4","Auth testing should specifically verify the 2FA login flow implementation"],
+["5.1.4","2.4.5","Info leakage testing should check privacy-preserving biometric architecture"],
+["3.3.3","5.3.3","Vote casting endpoint implementation determines vote casting load test design"],
+["6.3.3","5.1.1","Threat model documentation should reference OWASP testing findings"],
+["1.3.4","3.5.2","Database setup configuration affects identity-vote database separation design"],
+["4.4.1","4.1.3","Circumvention tool research findings inform Tor browser compatibility requirements"],
+["6.5.3","6.3.3","Incident response plan should reference threat model documentation"],
+["3.4.6","5.4.3","Mobile responsive design issues found in browser compatibility testing"],
+["2.2.6","6.1.1","User profile features need to be documented in user guide"],
+["1.1.3","5.4.4","CI/CD pipeline setup and continuous testing setup share the same GitHub Actions config"]
+];
+
+// === STATE ===
+let showIndirect=false, physicsOn=true, selectedNode=null, editMode=false;
+const nodeMap=new Map();
+nodes.forEach(n=>{n.milestone=parseInt(n.id.split(".")[0]);nodeMap.set(n.id,n)});
+
+// Build link objects
+let links=edges.map(e=>({source:e[0],target:e[1],type:"direct"}));
+let indirectLinks=indirectEdges.map(e=>({source:e[0],target:e[1],type:"indirect",reason:e[2]}));
+
+// Compute node types: start (no incoming direct), merge (>1 incoming direct), end
+function computeNodeTypes(){
+  const inc=new Map();
+  nodes.forEach(n=>inc.set(n.id,0));
+  edges.forEach(e=>{let c=inc.get(e[1])||0;inc.set(e[1],c+1)});
+  nodes.forEach(n=>{
+    n.inDeg=inc.get(n.id)||0;
+    n.outDeg=edges.filter(e=>e[0]===n.id).length;
+    if(n.id==="6.5.6")n.type="end";
+    else if(n.inDeg===0)n.type="start";
+    else if(n.inDeg>1)n.type="merge";
+    else n.type="normal";
+  });
+}
+computeNodeTypes();
+
+// Ancestors & descendants (direct only)
+function getAncestors(id){
+  const s=new Set(),q=[id];
+  while(q.length){const c=q.pop();edges.forEach(e=>{if(e[1]===c&&!s.has(e[0])){s.add(e[0]);q.push(e[0])}});}
+  return s;
+}
+function getDescendants(id){
+  const s=new Set(),q=[id];
+  while(q.length){const c=q.pop();edges.forEach(e=>{if(e[0]===c&&!s.has(e[1])){s.add(e[1]);q.push(e[1])}});}
+  return s;
+}
+
+// Critical path: longest path from start nodes to given node, or from node to 6.5.6
+function criticalPathTo(targetId){
+  // BFS topological longest path from all start nodes to target
+  const dist=new Map(),prev=new Map();
+  nodes.forEach(n=>dist.set(n.id,-Infinity));
+  // find start nodes
+  const starts=nodes.filter(n=>n.type==="start").map(n=>n.id);
+  starts.forEach(s=>dist.set(s,nodeMap.get(s).hours));
+  // topological sort
+  const inDeg=new Map();
+  nodes.forEach(n=>inDeg.set(n.id,0));
+  edges.forEach(e=>inDeg.set(e[1],(inDeg.get(e[1])||0)+1));
+  const q=[];
+  nodes.forEach(n=>{if(inDeg.get(n.id)===0)q.push(n.id)});
+  const order=[];
+  while(q.length){
+    const u=q.shift();order.push(u);
+    edges.forEach(e=>{if(e[0]===u){inDeg.set(e[1],inDeg.get(e[1])-1);if(inDeg.get(e[1])===0)q.push(e[1])}});
+  }
+  order.forEach(u=>{
+    edges.forEach(e=>{
+      if(e[0]===u){
+        const w=dist.get(u)+(nodeMap.get(e[1])?nodeMap.get(e[1]).hours:0);
+        if(w>dist.get(e[1])){dist.set(e[1],w);prev.set(e[1],u)}
+      }
+    });
+  });
+  // trace back from target
+  const path=[targetId];
+  let cur=targetId;
+  while(prev.has(cur)){cur=prev.get(cur);path.unshift(cur)}
+  return path;
+}
+function criticalPathFrom(srcId){
+  // longest path from srcId to 6.5.6
+  const dist=new Map(),prev=new Map();
+  nodes.forEach(n=>dist.set(n.id,-Infinity));
+  dist.set(srcId,nodeMap.get(srcId).hours);
+  const inDeg=new Map();
+  nodes.forEach(n=>inDeg.set(n.id,0));
+  edges.forEach(e=>inDeg.set(e[1],(inDeg.get(e[1])||0)+1));
+  const q=[];
+  nodes.forEach(n=>{if(inDeg.get(n.id)===0)q.push(n.id)});
+  const order=[];
+  while(q.length){
+    const u=q.shift();order.push(u);
+    edges.forEach(e=>{if(e[0]===u){inDeg.set(e[1],inDeg.get(e[1])-1);if(inDeg.get(e[1])===0)q.push(e[1])}});
+  }
+  // only process from srcId onwards
+  let started=false;
+  order.forEach(u=>{
+    if(u===srcId)started=true;
+    if(!started)return;
+    edges.forEach(e=>{
+      if(e[0]===u&&dist.get(u)>-Infinity){
+        const w=dist.get(u)+(nodeMap.get(e[1])?nodeMap.get(e[1]).hours:0);
+        if(w>dist.get(e[1])){dist.set(e[1],w);prev.set(e[1],u)}
+      }
+    });
+  });
+  const path=["6.5.6"];
+  let cur="6.5.6";
+  while(prev.has(cur)){cur=prev.get(cur);path.unshift(cur)}
+  if(path[0]!==srcId)return [srcId];
+  return path;
+}
+
+// === D3 SETUP ===
+const W=window.innerWidth,H=window.innerHeight;
+const svg=d3.select("svg").attr("width",W).attr("height",H);
+const g=svg.append("g");
+const zoom=d3.zoom().scaleExtent([0.1,5]).on("zoom",e=>g.attr("transform",e.transform));
+svg.call(zoom);
+
+// Arrow markers
+svg.append("defs").selectAll("marker").data(["direct","indirect","highlight","critical"])
+  .join("marker").attr("id",d=>"arr-"+d).attr("viewBox","0 0 10 6").attr("refX",10).attr("refY",3)
+  .attr("markerWidth",8).attr("markerHeight",6).attr("orient","auto")
+  .append("path").attr("d","M0,0L10,3L0,6Z")
+  .attr("fill",d=>d==="direct"?"#30363d":d==="indirect"?"#f0883e":d==="highlight"?"#58a6ff":"#f97583");
+
+// Force simulation
+const sim=d3.forceSimulation(nodes)
+  .force("link",d3.forceLink(links).id(d=>d.id).distance(80).strength(0.4))
+  .force("charge",d3.forceManyBody().strength(-300))
+  .force("center",d3.forceCenter(W/2,H/2))
+  .force("x",d3.forceX(d=>(d.milestone-1)*W/6+W/12).strength(0.15))
+  .force("y",d3.forceY(H/2).strength(0.05))
+  .force("collision",d3.forceCollide(25))
+  .alphaDecay(0.02);
+
+// Draw indirect links (hidden by default)
+const indLinkG=g.append("g").attr("class","ind-links").style("display","none");
+const indLinkSel=indLinkG.selectAll("line").data(indirectLinks).join("line")
+  .attr("stroke","#f0883e").attr("stroke-width",1.5).attr("stroke-dasharray","6,4")
+  .attr("opacity",0.6).attr("marker-end","url(#arr-indirect)")
+  .style("cursor","pointer")
+  .on("click",(ev,d)=>{ev.stopPropagation();showLinkInfo(d)});
+
+// Draw direct links
+const linkSel=g.append("g").selectAll("line").data(links).join("line")
+  .attr("stroke","#30363d").attr("stroke-width",1.5).attr("marker-end","url(#arr-direct)")
+  .style("cursor","pointer")
+  .on("click",(ev,d)=>{ev.stopPropagation();showDirectLinkInfo(d)});
+
+// Draw nodes
+const nodeG=g.append("g").selectAll("g").data(nodes).join("g")
+  .style("cursor","pointer")
+  .call(d3.drag().on("start",dragS).on("drag",dragD).on("end",dragE));
+
+nodeG.append("path").attr("d",d=>{
+  if(d.type==="end")return d3.symbol().type(d3.symbolStar).size(300)();
+  if(d.type==="merge")return d3.symbol().type(d3.symbolDiamond).size(250)();
+  return d3.symbol().type(d3.symbolCircle).size(200)();
+}).attr("fill",d=>MC[d.milestone]).attr("stroke","#0d1117").attr("stroke-width",1.5);
+
+nodeG.append("text").text(d=>d.id).attr("dy",d=>d.type==="end"?-14:-12)
+  .attr("text-anchor","middle").attr("fill","#8b949e").attr("font-size","9px");
+
+// Hover highlight
+nodeG.on("mouseenter",(ev,d)=>{
+  if(selectedNode)return;
+  const anc=getAncestors(d.id),desc=getDescendants(d.id);
+  const related=new Set([d.id,...anc,...desc]);
+  nodeG.attr("opacity",n=>related.has(n.id)?1:0.15);
+  linkSel.attr("opacity",l=>{
+    const s=typeof l.source==="object"?l.source.id:l.source;
+    const t=typeof l.target==="object"?l.target.id:l.target;
+    return related.has(s)&&related.has(t)?1:0.08;
+  }).attr("stroke",l=>{
+    const s=typeof l.source==="object"?l.source.id:l.source;
+    const t=typeof l.target==="object"?l.target.id:l.target;
+    return (anc.has(s)||s===d.id)&&(desc.has(t)||t===d.id||anc.has(t)||s===d.id)?"#58a6ff":"#30363d";
+  });
+}).on("mouseleave",(ev,d)=>{
+  if(selectedNode)return;
+  nodeG.attr("opacity",1);
+  linkSel.attr("opacity",1).attr("stroke","#30363d");
+});
+
+// Click to select
+nodeG.on("click",(ev,d)=>{ev.stopPropagation();selectNode(d)});
+svg.on("click",()=>{deselectNode()});
+
+// Tick
+sim.on("tick",()=>{
+  linkSel.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y)
+    .attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+  indLinkSel.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y)
+    .attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+  nodeG.attr("transform",d=>`translate(${d.x},${d.y})`);
+});
+
+function dragS(ev,d){if(!ev.active)sim.alphaTarget(0.3).restart();d.fx=d.x;d.fy=d.y}
+function dragD(ev,d){d.fx=ev.x;d.fy=ev.y}
+function dragE(ev,d){if(!ev.active)sim.alphaTarget(0);if(!physicsOn){d.fx=d.x;d.fy=d.y}else{d.fx=null;d.fy=null}}
+
+// Stats
+function updateStats(){
+  document.getElementById("st").innerHTML=`Nodes: ${nodes.length} | Edges: ${edges.length} | Indirect: ${indirectEdges.length}`;
+}
+updateStats();
+
+// === NODE SELECTION & INFO PANEL ===
+function selectNode(d){
+  selectedNode=d;
+  const anc=getAncestors(d.id),desc=getDescendants(d.id);
+  const related=new Set([d.id,...anc,...desc]);
+  nodeG.attr("opacity",n=>related.has(n.id)?1:0.15);
+  linkSel.attr("opacity",l=>{
+    const s=l.source.id||l.source,t=l.target.id||l.target;
+    return related.has(s)&&related.has(t)?1:0.08;
+  }).attr("stroke",l=>{
+    const s=l.source.id||l.source,t=l.target.id||l.target;
+    return related.has(s)&&related.has(t)?"#58a6ff":"#30363d";
+  });
+  showInfoPanel(d);
+}
+function deselectNode(){
+  selectedNode=null;editMode=false;
+  nodeG.attr("opacity",1);
+  linkSel.attr("opacity",1).attr("stroke","#30363d");
+  document.getElementById("ip").style.display="none";
+  // clear critical path highlight
+  nodeG.select("path").attr("stroke","#0d1117").attr("stroke-width",1.5);
+  linkSel.attr("stroke-width",1.5).attr("marker-end","url(#arr-direct)");
+}
+function closePanel(){deselectNode()}
+
+function showInfoPanel(d){
+  const ip=document.getElementById("ip");
+  const ib=document.getElementById("ib");
+  // Get parents and children
+  const parents=edges.filter(e=>e[1]===d.id).map(e=>e[0]);
+  const children=edges.filter(e=>e[0]===d.id).map(e=>e[1]);
+  const indConn=indirectEdges.filter(e=>e[0]===d.id||e[1]===d.id);
+  // Dependency reasons for incoming
+  const inReasons=parents.map(p=>{const k=p+">"+d.id;return DR[k]?`<span style="color:#58a6ff">${p}</span>→ ${DR[k]}`:`<span style="color:#58a6ff">${p}</span>→ (no reason)`}).join("<br>");
+  // Dependency reasons for outgoing
+  const outReasons=children.map(c=>{const k=d.id+">"+c;return DR[k]?`→<span style="color:#58a6ff">${c}</span>: ${DR[k]}`:`→<span style="color:#58a6ff">${c}</span>: (no reason)`}).join("<br>");
+
+  ib.innerHTML=`
+    <h3 style="color:#58a6ff;margin-bottom:8px">${d.id}: ${d.name}</h3>
+    <div class="f"><span class="l">Milestone:</span> <span class="v">${d.milestone} — ${MN[d.milestone]}</span></div>
+    <div class="f"><span class="l">Parent Task:</span> <span class="v">[${d.parent}]</span></div>
+    <div class="f"><span class="l">Agent:</span> <span class="v">${d.agent}</span></div>
+    <div class="f"><span class="l">Hours:</span> <span class="v">${d.hours}h</span></div>
+    <div class="f"><span class="l">Type:</span> <span class="v">${d.type} (in:${d.inDeg} out:${d.outDeg})</span></div>
+    <hr style="border-color:#30363d;margin:6px 0">
+    <div class="f"><span class="l">Predecessors (${parents.length}):</span><br>${inReasons||"<i>None (start node)</i>"}</div>
+    <hr style="border-color:#30363d;margin:6px 0">
+    <div class="f"><span class="l">Successors (${children.length}):</span><br>${outReasons||"<i>None (end node)</i>"}</div>
+    ${indConn.length?`<hr style="border-color:#30363d;margin:6px 0"><div class="f"><span class="l">Indirect Connections (${indConn.length}):</span><br>${indConn.map(ic=>{
+      const other=ic[0]===d.id?ic[1]:ic[0];
+      return `<div class="conn-item"><span><span style="color:#f0883e">↔ ${other}</span>: ${ic[2]}</span></div>`;
+    }).join("")}</div>`:""}
+    <hr style="border-color:#30363d;margin:6px 0">
+    <div style="display:flex;gap:4px;flex-wrap:wrap;margin-top:4px">
+      <button onclick="showEditNode('${d.id}')">Edit Node</button>
+      <button class="s" onclick="showEditConnections('${d.id}')">Edit Connections</button>
+      <button class="s" onclick="showAddIndirect('${d.id}')">+ Indirect</button>
+      <button class="s" onclick="highlightCriticalTo('${d.id}')">Critical Path ←</button>
+      <button class="s" onclick="highlightCriticalFrom('${d.id}')">Critical Path →</button>
+      ${d.id!=="6.5.6"?`<button class="warn" onclick="deleteNode('${d.id}')">Delete</button>`:""}
     </div>
+  `;
+  ip.style.display="block";
+}
 
-    <script>
-        // Task data with dependencies
-        const tasks = [
-            // Milestone 1: Foundation & Setup
-            { id: "1.1", name: "Project Init", milestone: 1, agent: "DEV", hours: 18, week: 1, critical: true, deps: [] },
-            { id: "1.2", name: "Tech Stack", milestone: 1, agent: "ARCH", hours: 26, week: 1, critical: true, deps: ["1.1"] },
-            { id: "1.3", name: "Infrastructure", milestone: 1, agent: "DEVOPS", hours: 28, week: 2, critical: true, deps: ["1.2"] },
-            { id: "1.4", name: "CONSUL Fork", milestone: 1, agent: "DEV", hours: 22, week: 2, critical: true, deps: ["1.2"] },
-            
-            // Milestone 2: Platform Customization
-            { id: "2.1", name: "Branding", milestone: 2, agent: "UX", hours: 28, week: 3, critical: true, deps: ["1.4"] },
-            { id: "2.2", name: "Registration", milestone: 2, agent: "DEV", hours: 48, week: 3, critical: true, deps: ["2.1"] },
-            { id: "2.3", name: "2FA", milestone: 2, agent: "DEV", hours: 22, week: 4, critical: false, deps: ["2.2"] },
-            { id: "2.4", name: "Biometrics", milestone: 2, agent: "DEV+SEC", hours: 60, week: 4, critical: true, deps: ["2.2"] },
-            
-            // Milestone 3: Cryptographic Voting
-            { id: "3.1", name: "Helios Arch", milestone: 3, agent: "CRYPTO", hours: 34, week: 5, critical: true, deps: ["2.1"] },
-            { id: "3.2", name: "Helios Deploy", milestone: 3, agent: "DEVOPS", hours: 38, week: 6, critical: true, deps: ["3.1"] },
-            { id: "3.3", name: "API Bridge", milestone: 3, agent: "DEV", hours: 52, week: 6, critical: true, deps: ["3.2"] },
-            { id: "3.4", name: "Voting UI", milestone: 3, agent: "UX+DEV", hours: 52, week: 7, critical: true, deps: ["3.3"] },
-            { id: "3.5", name: "Privacy", milestone: 3, agent: "CRYPTO", hours: 32, week: 8, critical: false, deps: ["3.4"] },
-            
-            // Milestone 4: Censorship Resistance (parallel)
-            { id: "4.1", name: "Tor Hardening", milestone: 4, agent: "DEVOPS", hours: 22, week: 6, critical: false, deps: ["1.3"] },
-            { id: "4.2", name: "Domain Front", milestone: 4, agent: "DEVOPS", hours: 28, week: 7, critical: false, deps: ["4.1"] },
-            { id: "4.3", name: "IPFS", milestone: 4, agent: "DEVOPS", hours: 38, week: 7, critical: false, deps: ["4.2"] },
-            { id: "4.4", name: "VPN Guide", milestone: 4, agent: "SEC", hours: 18, week: 8, critical: false, deps: ["4.2"] },
-            
-            // Milestone 5: Security & Testing
-            { id: "5.1", name: "Security Audit", milestone: 5, agent: "SEC", hours: 54, week: 9, critical: true, deps: ["3.5"] },
-            { id: "5.2", name: "Bio Testing", milestone: 5, agent: "SEC+QA", hours: 32, week: 9, critical: false, deps: ["2.4"] },
-            { id: "5.3", name: "Load Testing", milestone: 5, agent: "QA", hours: 24, week: 9, critical: false, deps: ["3.4"] },
-            { id: "5.4", name: "E2E Testing", milestone: 5, agent: "QA", hours: 40, week: 10, critical: true, deps: ["5.1"] },
-            
-            // Milestone 6: Documentation & Launch
-            { id: "6.1", name: "User Docs", milestone: 6, agent: "UX", hours: 34, week: 11, critical: true, deps: ["5.4"] },
-            { id: "6.2", name: "Admin Docs", milestone: 6, agent: "ARCH", hours: 30, week: 11, critical: false, deps: ["6.1"] },
-            { id: "6.3", name: "Security Policy", milestone: 6, agent: "SEC", hours: 28, week: 11, critical: false, deps: ["5.1"] },
-            { id: "6.4", name: "Beta Testing", milestone: 6, agent: "ALL", hours: 50, week: 11, critical: true, deps: ["6.1"] },
-            { id: "6.5", name: "Launch", milestone: 6, agent: "ALL", hours: 32, week: 12, critical: true, deps: ["6.4"] },
-        ];
+// Show link info on click
+function showDirectLinkInfo(l){
+  const s=l.source.id||l.source,t=l.target.id||l.target;
+  const k=s+">"+t;
+  const reason=DR[k]||"No reason documented";
+  const ip=document.getElementById("ip"),ib=document.getElementById("ib");
+  ib.innerHTML=`<h3 style="color:#58a6ff">Edge: ${s} → ${t}</h3>
+    <div class="f"><span class="l">From:</span> <span class="v">${s}: ${nodeMap.get(s)?.name||"?"}</span></div>
+    <div class="f"><span class="l">To:</span> <span class="v">${t}: ${nodeMap.get(t)?.name||"?"}</span></div>
+    <div class="f"><span class="l">Reason:</span> <span class="v">${reason}</span></div>`;
+  ip.style.display="block";
+}
+function showLinkInfo(l){
+  const s=l.source.id||l.source,t=l.target.id||l.target;
+  const ip=document.getElementById("ip"),ib=document.getElementById("ib");
+  ib.innerHTML=`<h3 style="color:#f0883e">Indirect: ${s} ↔ ${t}</h3>
+    <div class="f"><span class="l">From:</span> <span class="v">${s}: ${nodeMap.get(s)?.name||"?"}</span></div>
+    <div class="f"><span class="l">To:</span> <span class="v">${t}: ${nodeMap.get(t)?.name||"?"}</span></div>
+    <div class="f"><span class="l">Reason:</span> <span class="v">${l.reason}</span></div>`;
+  ip.style.display="block";
+}
 
-        // Milestone colors
-        const milestoneColors = {
-            1: "#667eea",
-            2: "#764ba2",
-            3: "#f093fb",
-            4: "#4facfe",
-            5: "#43e97b",
-            6: "#f5576c"
-        };
+// Critical path highlight
+function highlightCriticalTo(id){
+  const path=criticalPathTo(id);
+  applyCriticalHighlight(path);
+}
+function highlightCriticalFrom(id){
+  const path=criticalPathFrom(id);
+  applyCriticalHighlight(path);
+}
+function applyCriticalHighlight(path){
+  const pathSet=new Set(path);
+  const pathEdges=new Set();
+  for(let i=0;i<path.length-1;i++)pathEdges.add(path[i]+">"+path[i+1]);
+  nodeG.attr("opacity",n=>pathSet.has(n.id)?1:0.1);
+  nodeG.select("path").attr("stroke",n=>pathSet.has(n.id)?"#f97583":"#0d1117")
+    .attr("stroke-width",n=>pathSet.has(n.id)?3:1.5);
+  linkSel.attr("opacity",l=>{
+    const s=l.source.id||l.source,t=l.target.id||l.target;
+    return pathEdges.has(s+">"+t)?1:0.05;
+  }).attr("stroke",l=>{
+    const s=l.source.id||l.source,t=l.target.id||l.target;
+    return pathEdges.has(s+">"+t)?"#f97583":"#30363d";
+  }).attr("stroke-width",l=>{
+    const s=l.source.id||l.source,t=l.target.id||l.target;
+    return pathEdges.has(s+">"+t)?3:1.5;
+  }).attr("marker-end",l=>{
+    const s=l.source.id||l.source,t=l.target.id||l.target;
+    return pathEdges.has(s+">"+t)?"url(#arr-critical)":"url(#arr-direct)";
+  });
+  // Show path info
+  const totalHours=path.reduce((s,id)=>(nodeMap.get(id)?s+nodeMap.get(id).hours:s),0);
+  const ip=document.getElementById("ip"),ib=document.getElementById("ib");
+  ib.innerHTML=`<h3 style="color:#f97583">Critical Path (${path.length} nodes, ${totalHours}h)</h3>
+    <div style="font-size:11px;line-height:1.6">${path.map((id,i)=>`<span style="color:${MC[nodeMap.get(id)?.milestone||1]}">${id}</span>${i<path.length-1?" → ":""}`).join("")}</div>
+    <div style="margin-top:6px"><button class="s" onclick="deselectNode()">Clear</button></div>`;
+  ip.style.display="block";
+}
 
-        // Create links from dependencies
-        const links = [];
-        tasks.forEach(task => {
-            task.deps.forEach(depId => {
-                const source = tasks.find(t => t.id === depId);
-                if (source) {
-                    links.push({
-                        source: source.id,
-                        target: task.id,
-                        agent: task.agent,
-                        hours: task.hours,
-                        critical: source.critical && task.critical
-                    });
-                }
-            });
-        });
+// === TOOLBAR FUNCTIONS ===
+function togglePhysics(){
+  physicsOn=!physicsOn;
+  document.getElementById("physBtn").textContent="Physics: "+(physicsOn?"ON":"OFF");
+  document.getElementById("physBtn").classList.toggle("on",physicsOn);
+  if(physicsOn){nodes.forEach(n=>{n.fx=null;n.fy=null});sim.alpha(0.3).restart()}
+  else{nodes.forEach(n=>{n.fx=n.x;n.fy=n.y});sim.stop()}
+}
+function toggleIndirect(){
+  showIndirect=!showIndirect;
+  document.getElementById("indBtn").textContent="Indirect: "+(showIndirect?"ON":"OFF");
+  document.getElementById("indBtn").classList.toggle("on",showIndirect);
+  indLinkG.style("display",showIndirect?null:"none");
+  if(showIndirect){
+    sim.force("indLink",d3.forceLink(indirectLinks).id(d=>d.id).distance(150).strength(0.05));
+  }else{
+    sim.force("indLink",null);
+  }
+  sim.alpha(0.3).restart();
+}
+function centerGraph(){
+  svg.transition().duration(500).call(zoom.transform,d3.zoomIdentity.translate(W/2,H/2).scale(0.8).translate(-W/2,-H/2));
+}
+function resetView(){
+  deselectNode();
+  document.getElementById("mf").value="all";
+  document.getElementById("af").value="all";
+  document.getElementById("sb").value="";
+  nodeG.attr("opacity",1).style("display",null);
+  linkSel.attr("opacity",1).attr("stroke","#30363d").attr("stroke-width",1.5).attr("marker-end","url(#arr-direct)").style("display",null);
+  centerGraph();
+}
 
-        // SVG setup
-        const width = window.innerWidth;
-        const height = window.innerHeight;
-        
-        const svg = d3.select("#graph")
-            .attr("width", width)
-            .attr("height", height);
+// Milestone filter
+document.getElementById("mf").addEventListener("change",function(){
+  const v=this.value;
+  if(v==="all"){nodeG.style("display",null);linkSel.style("display",null);return}
+  const m=parseInt(v);
+  nodeG.style("display",n=>n.milestone===m?null:"none");
+  linkSel.style("display",l=>{
+    const s=l.source.id||l.source,t=l.target.id||l.target;
+    const sn=nodeMap.get(s),tn=nodeMap.get(t);
+    return sn&&tn&&sn.milestone===m&&tn.milestone===m?null:"none";
+  });
+});
 
-        // Add zoom behavior
-        const g = svg.append("g");
-        
-        const zoom = d3.zoom()
-            .scaleExtent([0.1, 4])
-            .on("zoom", (event) => {
-                g.attr("transform", event.transform);
-            });
-        
-        svg.call(zoom);
+// Agent filter
+document.getElementById("af").addEventListener("change",function(){
+  const v=this.value;
+  if(v==="all"){nodeG.attr("opacity",1);return}
+  nodeG.attr("opacity",n=>n.agent.includes(v)?1:0.12);
+});
 
-        // Force simulation
-        let simulation = d3.forceSimulation(tasks)
-            .force("link", d3.forceLink(links).id(d => d.id).distance(150))
-            .force("charge", d3.forceManyBody().strength(-300))
-            .force("center", d3.forceCenter(width / 2, height / 2))
-            .force("collision", d3.forceCollide().radius(40));
+// Search
+document.getElementById("sb").addEventListener("input",function(){
+  const q=this.value.toLowerCase().trim();
+  if(!q){nodeG.attr("opacity",1);linkSel.attr("opacity",1);return}
+  nodeG.attr("opacity",n=>(n.id.toLowerCase().includes(q)||n.name.toLowerCase().includes(q))?1:0.1);
+  linkSel.attr("opacity",0.15);
+});
 
-        // Draw links
-        const link = g.append("g")
-            .selectAll("path")
-            .data(links)
-            .join("path")
-            .attr("class", d => `link ${d.critical ? 'critical' : ''}`)
-            .attr("marker-end", "url(#arrowhead)");
+// === MODAL SYSTEM ===
+function openModal(html){
+  document.getElementById("modal").innerHTML=html;
+  document.getElementById("overlay").style.display="flex";
+}
+function closeModal(ev){
+  if(ev&&ev.target!==document.getElementById("overlay"))return;
+  document.getElementById("overlay").style.display="none";
+}
+function closeModalForce(){document.getElementById("overlay").style.display="none"}
 
-        // Add arrowhead marker
-        svg.append("defs").append("marker")
-            .attr("id", "arrowhead")
-            .attr("viewBox", "0 -5 10 10")
-            .attr("refX", 35)
-            .attr("refY", 0)
-            .attr("markerWidth", 6)
-            .attr("markerHeight", 6)
-            .attr("orient", "auto")
-            .append("path")
-            .attr("d", "M0,-5L10,0L0,5")
-            .attr("fill", "rgba(102, 126, 234, 0.6)");
+// === ADD NODE ===
+function showAddNode(){
+  const allIds=nodes.map(n=>n.id).sort();
+  openModal(`<h3>Add New Node</h3>
+    <div class="edit-row"><label>ID:</label><input id="an_id" placeholder="e.g. 2.5.1"></div>
+    <div class="edit-row"><label>Name:</label><input id="an_name" placeholder="Task name"></div>
+    <div class="edit-row"><label>Agent:</label><select id="an_agent">${AGENTS.map(a=>`<option>${a}</option>`).join("")}</select></div>
+    <div class="edit-row"><label>Hours:</label><input id="an_hours" type="number" value="8"></div>
+    <div class="edit-row"><label>Parent Task:</label><input id="an_parent" placeholder="e.g. 2.5"></div>
+    <div class="edit-row"><label>Predecessor:</label><select id="an_pred"><option value="">(none)</option>${allIds.map(id=>`<option value="${id}">${id}: ${nodeMap.get(id).name}</option>`).join("")}</select></div>
+    <div class="edit-row"><label>Successor:</label><select id="an_succ"><option value="">(none)</option>${allIds.map(id=>`<option value="${id}">${id}: ${nodeMap.get(id).name}</option>`).join("")}</select></div>
+    <div style="margin-top:10px;display:flex;gap:6px">
+      <button onclick="addNode()">Add</button>
+      <button class="s" onclick="closeModalForce()">Cancel</button>
+    </div>`);
+}
+function addNode(){
+  const id=document.getElementById("an_id").value.trim();
+  const name=document.getElementById("an_name").value.trim();
+  const agent=document.getElementById("an_agent").value;
+  const hours=parseInt(document.getElementById("an_hours").value)||8;
+  const parent=document.getElementById("an_parent").value.trim();
+  const pred=document.getElementById("an_pred").value;
+  const succ=document.getElementById("an_succ").value;
+  if(!id||!name){alert("ID and Name required");return}
+  if(nodeMap.has(id)){alert("ID already exists");return}
+  const milestone=parseInt(id.split(".")[0]);
+  const n={id,name,agent,hours,parent:parent||id.split(".").slice(0,2).join("."),milestone};
+  nodes.push(n);nodeMap.set(id,n);
+  if(pred)edges.push([pred,id]);
+  if(succ)edges.push([id,succ]);
+  computeNodeTypes();
+  rebuildGraph();
+  closeModalForce();
+}
 
-        // Link labels
-        const linkLabel = g.append("g")
-            .selectAll("text")
-            .data(links)
-            .join("text")
-            .attr("class", "link-label")
-            .text(d => `${d.agent} (${d.hours}h)`);
+// === EDIT NODE ===
+function showEditNode(id){
+  const d=nodeMap.get(id);if(!d)return;
+  openModal(`<h3>Edit Node: ${id}</h3>
+    <div class="edit-row"><label>Name:</label><input id="en_name" value="${d.name}"></div>
+    <div class="edit-row"><label>Agent:</label><select id="en_agent">${AGENTS.map(a=>`<option${a===d.agent?" selected":""}>${a}</option>`).join("")}</select></div>
+    <div class="edit-row"><label>Hours:</label><input id="en_hours" type="number" value="${d.hours}"></div>
+    <div class="edit-row"><label>Parent Task:</label><input id="en_parent" value="${d.parent}"></div>
+    <div style="margin-top:10px;display:flex;gap:6px">
+      <button onclick="applyEditNode('${id}')">Save</button>
+      <button class="s" onclick="closeModalForce()">Cancel</button>
+    </div>`);
+}
+function applyEditNode(id){
+  const d=nodeMap.get(id);if(!d)return;
+  d.name=document.getElementById("en_name").value.trim()||d.name;
+  d.agent=document.getElementById("en_agent").value;
+  d.hours=parseInt(document.getElementById("en_hours").value)||d.hours;
+  d.parent=document.getElementById("en_parent").value.trim()||d.parent;
+  closeModalForce();
+  rebuildGraph();
+  selectNode(d);
+}
 
-        // Draw nodes
-        const node = g.append("g")
-            .selectAll("g")
-            .data(tasks)
-            .join("g")
-            .attr("class", d => `node ${d.critical ? 'critical' : ''}`)
-            .call(drag(simulation))
-            .on("click", showInfo);
+// === EDIT CONNECTIONS ===
+function showEditConnections(id){
+  const d=nodeMap.get(id);if(!d)return;
+  const parents=edges.filter(e=>e[1]===id);
+  const children=edges.filter(e=>e[0]===id);
+  const allIds=nodes.map(n=>n.id).filter(nid=>nid!==id).sort();
+  openModal(`<h3>Connections: ${id}</h3>
+    <div style="margin-bottom:8px"><span style="color:#8b949e">Predecessors:</span>
+    ${parents.map(e=>`<div class="conn-item"><span>${e[0]}: ${nodeMap.get(e[0])?.name||"?"}</span><span class="rm" onclick="removeEdge('${e[0]}','${id}');showEditConnections('${id}')">✕</span></div>`).join("")}
+    <div class="edit-row" style="margin-top:4px"><select id="ec_addpred"><option value="">(add predecessor)</option>${allIds.map(nid=>`<option value="${nid}">${nid}: ${nodeMap.get(nid).name}</option>`).join("")}</select>
+    <button onclick="addEdgeTo('${id}');showEditConnections('${id}')">+</button></div></div>
+    <div><span style="color:#8b949e">Successors:</span>
+    ${children.map(e=>`<div class="conn-item"><span>${e[1]}: ${nodeMap.get(e[1])?.name||"?"}</span><span class="rm" onclick="removeEdge('${id}','${e[1]}');showEditConnections('${id}')">✕</span></div>`).join("")}
+    <div class="edit-row" style="margin-top:4px"><select id="ec_addsucc"><option value="">(add successor)</option>${allIds.map(nid=>`<option value="${nid}">${nid}: ${nodeMap.get(nid).name}</option>`).join("")}</select>
+    <button onclick="addEdgeFrom('${id}');showEditConnections('${id}')">+</button></div></div>
+    <div style="margin-top:10px"><button class="s" onclick="closeModalForce();selectNode(nodeMap.get('${id}'))">Done</button></div>`);
+}
+function removeEdge(s,t){
+  const i=edges.findIndex(e=>e[0]===s&&e[1]===t);
+  if(i>=0){delete DR[s+">"+t];edges.splice(i,1);computeNodeTypes();rebuildGraph()}
+}
+function addEdgeTo(id){
+  const pred=document.getElementById("ec_addpred").value;
+  if(!pred)return;
+  if(edges.some(e=>e[0]===pred&&e[1]===id))return;
+  edges.push([pred,id]);computeNodeTypes();rebuildGraph();
+}
+function addEdgeFrom(id){
+  const succ=document.getElementById("ec_addsucc").value;
+  if(!succ)return;
+  if(edges.some(e=>e[0]===id&&e[1]===succ))return;
+  edges.push([id,succ]);computeNodeTypes();rebuildGraph();
+}
 
-        node.append("circle")
-            .attr("r", 25)
-            .attr("fill", d => milestoneColors[d.milestone]);
+// === ADD INDIRECT CONNECTION ===
+function showAddIndirect(id){
+  const d=nodeMap.get(id);if(!d)return;
+  const existing=indirectEdges.filter(e=>e[0]===id||e[1]===id);
+  const allIds=nodes.map(n=>n.id).filter(nid=>nid!==id).sort();
+  openModal(`<h3>Indirect Connections: ${id}</h3>
+    <div style="margin-bottom:8px"><span style="color:#8b949e">Existing:</span>
+    ${existing.map(e=>{
+      const other=e[0]===id?e[1]:e[0];
+      return `<div class="conn-item"><span style="color:#f0883e">${other}</span>: ${e[2]}<span class="rm" onclick="removeIndirect('${e[0]}','${e[1]}');showAddIndirect('${id}')">✕</span></div>`;
+    }).join("")||"<div style='color:#8b949e;font-size:11px'>None</div>"}</div>
+    <hr style="border-color:#30363d;margin:6px 0">
+    <div class="edit-row"><label>Node:</label><select id="ai_node"><option value="">(select)</option>${allIds.map(nid=>`<option value="${nid}">${nid}: ${nodeMap.get(nid).name}</option>`).join("")}</select></div>
+    <div class="edit-row"><label>Reason:</label><textarea id="ai_reason" placeholder="Why are these related?"></textarea></div>
+    <div style="margin-top:8px;display:flex;gap:6px">
+      <button onclick="addIndirect('${id}')">Add</button>
+      <button class="s" onclick="closeModalForce();selectNode(nodeMap.get('${id}'))">Done</button>
+    </div>`);
+}
+function addIndirect(id){
+  const other=document.getElementById("ai_node").value;
+  const reason=document.getElementById("ai_reason").value.trim();
+  if(!other||!reason){alert("Select a node and provide a reason");return}
+  if(indirectEdges.some(e=>(e[0]===id&&e[1]===other)||(e[0]===other&&e[1]===id)))return;
+  indirectEdges.push([id,other,reason]);
+  rebuildIndirect();
+  showAddIndirect(id);
+}
+function removeIndirect(s,t){
+  const i=indirectEdges.findIndex(e=>e[0]===s&&e[1]===t);
+  if(i>=0){indirectEdges.splice(i,1);rebuildIndirect()}
+}
 
-        node.append("text")
-            .attr("dy", 4)
-            .text(d => d.id);
+// === DELETE NODE ===
+function deleteNode(id){
+  if(!confirm(`Delete node ${id}?`))return;
+  const i=nodes.findIndex(n=>n.id===id);
+  if(i>=0)nodes.splice(i,1);
+  nodeMap.delete(id);
+  // remove edges involving this node
+  for(let j=edges.length-1;j>=0;j--){if(edges[j][0]===id||edges[j][1]===id){delete DR[edges[j][0]+">"+edges[j][1]];edges.splice(j,1)}}
+  for(let j=indirectEdges.length-1;j>=0;j--){if(indirectEdges[j][0]===id||indirectEdges[j][1]===id)indirectEdges.splice(j,1)}
+  computeNodeTypes();
+  deselectNode();
+  rebuildGraph();
+}
 
-        // Update positions on tick
-        simulation.on("tick", () => {
-            link.attr("d", d => {
-                const dx = d.target.x - d.source.x;
-                const dy = d.target.y - d.source.y;
-                const dr = Math.sqrt(dx * dx + dy * dy);
-                return `M${d.source.x},${d.source.y}A${dr},${dr} 0 0,1 ${d.target.x},${d.target.y}`;
-            });
+// === REBUILD GRAPH (after add/edit/delete) ===
+function rebuildGraph(){
+  // Rebuild links
+  links=edges.map(e=>({source:e[0],target:e[1],type:"direct"}));
+  indirectLinks=indirectEdges.map(e=>({source:e[0],target:e[1],type:"indirect",reason:e[2]}));
 
-            linkLabel
-                .attr("x", d => (d.source.x + d.target.x) / 2)
-                .attr("y", d => (d.source.y + d.target.y) / 2);
+  // Remove old elements
+  g.selectAll("*").remove();
 
-            node.attr("transform", d => `translate(${d.x},${d.y})`);
-        });
+  // Redraw indirect links
+  const newIndG=g.append("g").attr("class","ind-links").style("display",showIndirect?null:"none");
+  const newIndSel=newIndG.selectAll("line").data(indirectLinks).join("line")
+    .attr("stroke","#f0883e").attr("stroke-width",1.5).attr("stroke-dasharray","6,4")
+    .attr("opacity",0.6).attr("marker-end","url(#arr-indirect)")
+    .style("cursor","pointer").on("click",(ev,d)=>{ev.stopPropagation();showLinkInfo(d)});
 
-        // Drag behavior
-        function drag(simulation) {
-            function dragstarted(event) {
-                if (!event.active) simulation.alphaTarget(0.3).restart();
-                event.subject.fx = event.subject.x;
-                event.subject.fy = event.subject.y;
-            }
+  // Redraw direct links
+  const newLinkSel=g.append("g").selectAll("line").data(links).join("line")
+    .attr("stroke","#30363d").attr("stroke-width",1.5).attr("marker-end","url(#arr-direct)")
+    .style("cursor","pointer").on("click",(ev,d)=>{ev.stopPropagation();showDirectLinkInfo(d)});
 
-            function dragged(event) {
-                event.subject.fx = event.x;
-                event.subject.fy = event.y;
-            }
+  // Redraw nodes
+  const newNodeG=g.append("g").selectAll("g").data(nodes,d=>d.id).join("g")
+    .style("cursor","pointer")
+    .call(d3.drag().on("start",dragS).on("drag",dragD).on("end",dragE));
 
-            function dragended(event) {
-                if (!event.active) simulation.alphaTarget(0);
-                event.subject.fx = null;
-                event.subject.fy = null;
-            }
+  newNodeG.append("path").attr("d",d=>{
+    if(d.type==="end")return d3.symbol().type(d3.symbolStar).size(300)();
+    if(d.type==="merge")return d3.symbol().type(d3.symbolDiamond).size(250)();
+    return d3.symbol().type(d3.symbolCircle).size(200)();
+  }).attr("fill",d=>MC[d.milestone]).attr("stroke","#0d1117").attr("stroke-width",1.5);
 
-            return d3.drag()
-                .on("start", dragstarted)
-                .on("drag", dragged)
-                .on("end", dragended);
-        }
+  newNodeG.append("text").text(d=>d.id).attr("dy",d=>d.type==="end"?-14:-12)
+    .attr("text-anchor","middle").attr("fill","#8b949e").attr("font-size","9px");
 
-        // Show task info
-        function showInfo(event, d) {
-            const panel = document.getElementById("infoPanel");
-            const title = document.getElementById("infoTitle");
-            const content = document.getElementById("infoContent");
+  newNodeG.on("mouseenter",(ev,d)=>{
+    if(selectedNode)return;
+    const anc=getAncestors(d.id),desc=getDescendants(d.id);
+    const related=new Set([d.id,...anc,...desc]);
+    newNodeG.attr("opacity",n=>related.has(n.id)?1:0.15);
+    newLinkSel.attr("opacity",l=>{
+      const s=l.source.id||l.source,t=l.target.id||l.target;
+      return related.has(s)&&related.has(t)?1:0.08;
+    }).attr("stroke",l=>{
+      const s=l.source.id||l.source,t=l.target.id||l.target;
+      return related.has(s)&&related.has(t)?"#58a6ff":"#30363d";
+    });
+  }).on("mouseleave",()=>{
+    if(selectedNode)return;
+    newNodeG.attr("opacity",1);
+    newLinkSel.attr("opacity",1).attr("stroke","#30363d");
+  });
+  newNodeG.on("click",(ev,d)=>{ev.stopPropagation();selectNode(d)});
 
-            title.textContent = `${d.id}: ${d.name}`;
-            
-            content.innerHTML = `
-                <div class="info-row">
-                    <div class="info-label">Agent</div>
-                    <div class="info-value">${d.agent}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Week</div>
-                    <div class="info-value">Week ${d.week}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Estimated Hours</div>
-                    <div class="info-value">${d.hours} hours</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Critical Path</div>
-                    <div class="info-value">${d.critical ? '<span class="critical-badge">CRITICAL</span>' : 'No'}</div>
-                </div>
-                <div class="info-row">
-                    <div class="info-label">Dependencies</div>
-                    <div class="info-value">${d.deps.length > 0 ? d.deps.join(", ") : "None"}</div>
-                </div>
-            `;
+  // Update references for global use
+  Object.assign(linkSel,newLinkSel);
+  Object.assign(indLinkSel,newIndSel);
 
-            panel.classList.add("active");
+  // Restart simulation
+  sim.nodes(nodes);
+  sim.force("link",d3.forceLink(links).id(d=>d.id).distance(80).strength(0.4));
+  if(showIndirect)sim.force("indLink",d3.forceLink(indirectLinks).id(d=>d.id).distance(150).strength(0.05));
+  sim.on("tick",()=>{
+    newLinkSel.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y)
+      .attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+    newIndSel.attr("x1",d=>d.source.x).attr("y1",d=>d.source.y)
+      .attr("x2",d=>d.target.x).attr("y2",d=>d.target.y);
+    newNodeG.attr("transform",d=>`translate(${d.x},${d.y})`);
+  });
+  sim.alpha(0.5).restart();
+  updateStats();
+}
 
-            // Highlight selected node
-            node.classed("selected", n => n.id === d.id);
-        }
+function rebuildIndirect(){
+  indirectLinks=indirectEdges.map(e=>({source:e[0],target:e[1],type:"indirect",reason:e[2]}));
+  rebuildGraph();
+}
 
-        function closeInfo() {
-            document.getElementById("infoPanel").classList.remove("active");
-            node.classed("selected", false);
-        }
-
-        // Update stats
-        function updateStats() {
-            const visibleTasks = tasks.filter(t => t.visible !== false);
-            const visibleLinks = links.filter(l => {
-                const source = tasks.find(t => t.id === l.source.id || t.id === l.source);
-                const target = tasks.find(t => t.id === l.target.id || t.id === l.target);
-                return source?.visible !== false && target?.visible !== false;
-            });
-            const totalHours = visibleTasks.reduce((sum, t) => sum + t.hours, 0);
-
-            document.getElementById("visibleNodes").textContent = visibleTasks.length;
-            document.getElementById("visibleLinks").textContent = visibleLinks.length;
-            document.getElementById("totalHours").textContent = totalHours;
-        }
-
-        // Filters
-        document.getElementById("viewMode").addEventListener("change", (e) => {
-            const mode = e.target.value;
-            
-            tasks.forEach(task => {
-                if (mode === "all") {
-                    task.visible = true;
-                } else if (mode === "critical") {
-                    task.visible = task.critical;
-                } else if (mode.startsWith("milestone")) {
-                    const milestoneNum = parseInt(mode.replace("milestone", ""));
-                    task.visible = task.milestone === milestoneNum;
-                }
-            });
-
-            node.style("display", d => d.visible ? "block" : "none");
-            link.style("display", d => {
-                const source = tasks.find(t => t.id === d.source.id || t.id === d.source);
-                const target = tasks.find(t => t.id === d.target.id || t.id === d.target);
-                return source?.visible && target?.visible ? "block" : "none";
-            });
-            linkLabel.style("display", d => {
-                const source = tasks.find(t => t.id === d.source.id || t.id === d.source);
-                const target = tasks.find(t => t.id === d.target.id || t.id === d.target);
-                return source?.visible && target?.visible ? "block" : "none";
-            });
-
-            updateStats();
-            simulation.alpha(0.3).restart();
-        });
-
-        document.getElementById("agentFilter").addEventListener("change", (e) => {
-            const agent = e.target.value;
-            
-            tasks.forEach(task => {
-                if (agent === "all") {
-                    task.visible = true;
-                } else {
-                    task.visible = task.agent.includes(agent);
-                }
-            });
-
-            node.style("display", d => d.visible ? "block" : "none");
-            link.style("display", d => {
-                const source = tasks.find(t => t.id === d.source.id || t.id === d.source);
-                const target = tasks.find(t => t.id === d.target.id || t.id === d.target);
-                return source?.visible && target?.visible ? "block" : "none";
-            });
-            linkLabel.style("display", d => {
-                const source = tasks.find(t => t.id === d.source.id || t.id === d.source);
-                const target = tasks.find(t => t.id === d.target.id || t.id === d.target);
-                return source?.visible && target?.visible ? "block" : "none";
-            });
-
-            updateStats();
-            simulation.alpha(0.3).restart();
-        });
-
-        document.getElementById("nodeSize").addEventListener("input", (e) => {
-            const size = parseInt(e.target.value);
-            node.select("circle").attr("r", size);
-        });
-
-        document.getElementById("linkStrength").addEventListener("input", (e) => {
-            const strength = parseFloat(e.target.value);
-            simulation.force("link").strength(strength);
-            simulation.alpha(0.3).restart();
-        });
-
-        // Initial stats
-        updateStats();
-    </script>
+</script>
 </body>
 </html>
