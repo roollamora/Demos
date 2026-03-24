@@ -119,49 +119,25 @@
                     </select>
                 </div>
                 <div class="control-group">
-                    <label><input type="checkbox" id="showCritical" onchange="filterGraph()" checked> Show Critical Path Only</label>
+                    <label><input type="checkbox" id="showCritical" onchange="filterGraph()"> Critical Path Only</label>
                 </div>
                 <div class="control-group">
-                    <label><input type="checkbox" id="showIndirectGraph" onchange="toggleGraphIndirect()"> Show Indirect Connections</label>
+                    <label><input type="checkbox" id="showIndirect" onchange="toggleIndirectLinks()"> Show Indirect</label>
                 </div>
             </div>
-            
             <div class="graph-legend">
                 <h3>Legend</h3>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #667eea;"></div>
-                    <span>Foundation & Setup</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #764ba2;"></div>
-                    <span>Platform Customization</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #f093fb;"></div>
-                    <span>Cryptographic Voting</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #4facfe;"></div>
-                    <span>Censorship Resistance</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #43e97b;"></div>
-                    <span>Security & Testing</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #f5576c;"></div>
-                    <span>Documentation & Launch</span>
-                </div>
-                <div class="legend-item" style="margin-top: 10px;">
-                    <div style="width: 30px; height: 2px; background: #667eea; margin-right: 10px;"></div>
-                    <span>Direct Dependency</span>
-                </div>
-                <div class="legend-item">
-                    <div style="width: 30px; height: 2px; background: #aaa; margin-right: 10px; border-top: 2px dashed #aaa;"></div>
-                    <span>Indirect Connection</span>
-                </div>
+                <div class="legend-item"><div class="legend-color" style="background:#667eea"></div><span>M1: Foundation</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#764ba2"></div><span>M2: Platform</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#f093fb"></div><span>M3: Voting</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#4facfe"></div><span>M4: Censorship</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#43e97b"></div><span>M5: Security</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#f5576c"></div><span>M6: Launch</span></div>
+                <div class="legend-item" style="margin-top:10px"><div style="width:30px;height:2px;background:#667eea;margin-right:10px"></div><span>Direct</span></div>
+                <div class="legend-item"><div style="width:30px;height:0;border-top:2px dashed #f0883e;margin-right:10px"></div><span>Indirect</span></div>
             </div>
-            
+            <div id="graph-info" style="display:none;position:absolute;bottom:20px;right:20px;background:rgba(10,14,39,.95);padding:16px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:1000;max-width:380px;max-height:60vh;overflow-y:auto;font-size:12px;line-height:1.5">
+            </div>
             <svg id="graph"></svg>
         </div>
     </div>
