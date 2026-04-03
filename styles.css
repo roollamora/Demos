@@ -7,6 +7,37 @@ body {
     overflow-x: hidden;
 }
 
+.integration-toolbar {
+    background: #121a35;
+    border-bottom: 1px solid #2a3358;
+    padding: 10px 20px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    font-size: 14px;
+}
+.dim-toggle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+    color: #ccc;
+}
+.dim-toggle input { width: 18px; height: 18px; accent-color: #667eea; }
+.integration-hint {
+    font-size: 12px;
+    color: #7a8699;
+}
+.integration-hint code { font-size: 11px; color: #9aa5b8; }
+
+body.dim-integration-tiers .task-tier-extended,
+body.dim-integration-tiers .task-tier-later {
+    opacity: 0.34;
+    filter: grayscale(0.45);
+}
+body.dim-integration-tiers .task-tier-core { opacity: 1; filter: none; }
+
 /* Tab Navigation */
 .tabs {
     background: #16213e;

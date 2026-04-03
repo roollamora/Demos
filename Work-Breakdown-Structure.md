@@ -1,719 +1,375 @@
-# Digital Democracy Platform - Work Breakdown Structure (WBS)
+# Digital Democracy Platform — Work Breakdown Structure (Extensive)
 
-## Project Overview
-
-**Project Name:** Resilient Grassroots Digital Democracy Platform (Iran)
-**Duration:** 12 weeks (3 months) for Phase 1 MVP
-**Team Size:** 2-5 (1 expert + 1 beginner + 0-3 volunteers)
-**Budget:** <$50K
-**Critical Path Duration:** 10 weeks (highlighted below)
+This document is the **single master plan**: it lists **all** planned work from Phase 1 through Phase 4. Items are tagged by **integration tier** so you can **focus on the minimum viable path** while keeping later work visible (and **dimmed** in the dashboard graph).
 
 ---
 
-## WBS Legend
+## Project overview
 
-### Node Structure
+| Field | Value |
+|--------|--------|
+| **Project** | Resilient Grassroots Digital Democracy Platform (Iran) |
+| **This document** | Extensive WBS (Phase 1–4); **Core** = first shippable slice |
+| **Phase 1 calendar** | 12 weeks (MVP window) |
+| **Team** | 2–5 (1 expert + 1 beginner + 0–3 volunteers) |
+| **Budget envelope** | \<$50K (see cost note in Budget section) |
+
+---
+
+## Integration tiers (how to read tags)
+
+| Tag | Meaning | When it ships |
+|-----|---------|----------------|
+| **CORE** | Required for the **first coherent MVP**: forked platform, registration, cryptographic voting path, baseline Tor access, internal security review, E2E tests, user docs, beta, launch. | Phase 1 — gate for “we can run a real test vote stack.” |
+| **EXTENDED** | Still **Phase 1 full vision**; valuable but **deferrable** if you need to cut weeks: 2FA, full biometrics, vote anonymization hardening, domain fronting, IPFS, VPN guides, focused biometric/load tests, admin + policy depth. | Same phase as CORE, but **optional for first gate**. |
+| **LATER** | **Post-MVP integration** (your prior Phases 2–4): deeper decentralization, advanced biometrics/voting, scale, external audit. | After Phase 1 launch or parallel if capacity appears. |
+
+**Dashboard / graph:** In `project-dashboard-web`, **dimming** applies **EXTENDED** and **LATER** so the **CORE** spine stays visually dominant. Toggle **“Dim extended & later”** to see the full extensive plan at equal emphasis.
+
+**Dependency rule of thumb:** If you defer **EXTENDED** packages, **remove or relax any CORE task that still depends on them** (e.g. launch prep should not block on optional IPFS). The dashboard data aligns **production finalization** with **Tor baseline**, not IPFS-only paths.
+
+---
+
+## Master register — all work packages
+
+Work packages **1.x–6.x** = Phase 1. **7.x–9.x** = former roadmap, now first-class rows in the same register.
+
+| ID | Name | Tier | Primary agents |
+|----|------|------|----------------|
+| 1.1 | Project Initialization | CORE | ARCH + DEV |
+| 1.2 | Technology Stack Selection | CORE | ARCH (+ CRYPTO input) |
+| 1.3 | Infrastructure Provisioning | CORE | DEVOPS |
+| 1.4 | CONSUL Platform Fork | CORE | DEV |
+| 2.1 | CONSUL Branding & Localization | CORE | UX + DEV |
+| 2.2 | User Registration Module | CORE | DEV |
+| 2.3 | Two-Factor Authentication (2FA) | EXTENDED | DEV |
+| 2.4 | Biometric Identity Verification | EXTENDED | DEV + SEC |
+| 3.1 | Helios Integration Architecture | CORE | ARCH + CRYPTO |
+| 3.2 | Helios Deployment | CORE | DEVOPS + CRYPTO |
+| 3.3 | CONSUL–Helios API Bridge | CORE | DEV |
+| 3.4 | Voting UI Components | CORE | UX + DEV |
+| 3.5 | Vote Privacy & Anonymization | EXTENDED | CRYPTO + SEC |
+| 4.1 | Tor Hidden Service Hardening | CORE | DEVOPS + SEC |
+| 4.2 | Domain Fronting Setup | EXTENDED | DEVOPS |
+| 4.3 | Content Delivery via IPFS | EXTENDED | DEVOPS |
+| 4.4 | VPN/Proxy Recommendations | EXTENDED | SEC + UX |
+| 5.1 | Security Audit (Internal) | CORE | SEC + ARCH |
+| 5.2 | Biometric Security Testing | EXTENDED | SEC + DEV |
+| 5.3 | Load Testing | EXTENDED | QA + DEVOPS |
+| 5.4 | End-to-End Testing | CORE | QA + DEV |
+| 6.1 | User Documentation | CORE | UX + DEV |
+| 6.2 | Administrator Documentation | EXTENDED | ARCH + DEV |
+| 6.3 | Security & Privacy Policy | EXTENDED | SEC + ARCH |
+| 6.4 | Beta Testing Program | CORE | ALL |
+| 6.5 | Launch Preparation | CORE | ALL |
+| 7.1 | IPFS — full content + metadata integration | LATER | DEVOPS + DEV |
+| 7.2 | Blockchain audit trail | LATER | CRYPTO + DEV |
+| 7.3 | Mesh networking (e.g. Briar / Scuttlebutt exploration) | LATER | ARCH + DEV |
+| 7.4 | Offline voting with sync | LATER | CRYPTO + DEV |
+| 7.5 | Mobile apps (e.g. React Native) | LATER | DEV + UX |
+| 8.1 | Advanced biometrics (3D face + voice, roadmap) | LATER | DEV + SEC |
+| 8.2 | Advanced voting methods (ranked choice, quadratic, liquid) | LATER | ARCH + DEV |
+| 8.3 | Geo-restricted voting | LATER | DEV + SEC |
+| 8.4 | Live advocacy / dynamic representatives | LATER | DEV + UX |
+| 8.5 | DAO governance implementation | LATER | ARCH + CRYPTO |
+| 9.1 | Custom blockchain (e.g. Tendermint / Substrate) | LATER | CRYPTO + DEV |
+| 9.2 | Full P2P architecture (no central server) | LATER | ARCH + DEV |
+| 9.3 | Advanced cryptography (e.g. zk-SNARKs) | LATER | CRYPTO |
+| 9.4 | External security audit (professional firm) | LATER | SEC + ALL |
+| 9.5 | Scale to 10,000+ users | LATER | DEVOPS + DEV |
+
+---
+
+## CORE dependency path (minimum spine)
+
+Logical order for **CORE** only (EXTENDED/LATER nodes omitted):
+
 ```
-[Node ID] Task Name
-├─ Duration: X weeks
-├─ Agent Vector: Role(s) responsible
-├─ Dependencies: [Node IDs that must complete first]
-├─ Deliverable: What gets produced
-└─ Critical Path: ⚠️ (if on critical path)
-```
-
-### Agent Vectors (Roles)
-- **ARCH** - System Architect (Expert)
-- **DEV** - Full-Stack Developer (Expert/Beginner + AI)
-- **CRYPTO** - Cryptography Specialist (Expert/Volunteer)
-- **DEVOPS** - DevOps Engineer (Expert/Volunteer)
-- **UX** - UX/UI Designer (Volunteer/AI-assisted)
-- **SEC** - Security Specialist (Expert/Volunteer)
-- **QA** - Quality Assurance (Beginner + AI)
-
----
-
-## Phase 1: MVP (Weeks 1-12)
-
-### 🎯 MILESTONE 1: Foundation & Setup (Weeks 1-2)
-
-#### [1.1] Project Initialization ⚠️ CRITICAL PATH
-├─ Duration: 3 days
-├─ Agent Vector: ARCH + DEV
-├─ Dependencies: None
-├─ Deliverable: 
-│   - GitHub repository (private)
-│   - Development environment setup
-│   - CI/CD pipeline (GitHub Actions)
-│   - Project documentation structure
-└─ Tasks:
-    - Create repo with .gitignore, README, LICENSE (AGPL-3.0)
-    - Set up development containers (Docker)
-    - Configure GitHub Actions for automated testing
-    - Create project wiki for documentation
-
-#### [1.2] Technology Stack Selection ⚠️ CRITICAL PATH
-├─ Duration: 2 days
-├─ Agent Vector: ARCH
-├─ Dependencies: [1.1]
-├─ Deliverable:
-│   - Technology decision document
-│   - Architecture diagram (high-level)
-│   - Dependency list with versions
-└─ Tasks:
-    - Evaluate CONSUL vs. Decidim (recommend CONSUL for simplicity)
-    - Select cryptographic voting library (Helios)
-    - Choose biometric libraries (face-api.js)
-    - Document rationale for each choice
-
-#### [1.3] Infrastructure Provisioning ⚠️ CRITICAL PATH
-├─ Duration: 2 days
-├─ Agent Vector: DEVOPS
-├─ Dependencies: [1.2]
-├─ Deliverable:
-│   - VPS server (Hetzner/DigitalOcean)
-│   - Tor hidden service configured
-│   - PostgreSQL database
-│   - SSL certificates
-└─ Tasks:
-    - Provision VPS outside Iran (Germany/Netherlands)
-    - Install and configure Tor
-    - Set up PostgreSQL with encryption at rest
-    - Configure firewall and security hardening
-
-#### [1.4] CONSUL Platform Fork
-├─ Duration: 2 days
-├─ Agent Vector: DEV
-├─ Dependencies: [1.2]
-├─ Deliverable:
-│   - Forked CONSUL repository
-│   - Local development instance running
-│   - Customization plan document
-└─ Tasks:
-    - Fork CONSUL from GitHub
-    - Set up local development environment
-    - Run test suite to verify functionality
-    - Document customization points
-
----
-
-### 🎯 MILESTONE 2: Core Platform Customization (Weeks 3-4)
-
-#### [2.1] CONSUL Branding & Localization ⚠️ CRITICAL PATH
-├─ Duration: 3 days
-├─ Agent Vector: UX + DEV
-├─ Dependencies: [1.4]
-├─ Deliverable:
-│   - Persian (Farsi) language pack
-│   - Custom branding (logo, colors)
-│   - Simplified UI for general population
-└─ Tasks:
-    - Translate UI to Persian
-    - Create custom theme (CSS)
-    - Simplify navigation for non-technical users
-    - Add right-to-left (RTL) text support
-
-#### [2.2] User Registration Module ⚠️ CRITICAL PATH
-├─ Duration: 5 days
-├─ Agent Vector: DEV
-├─ Dependencies: [2.1]
-├─ Deliverable:
-│   - Registration flow with email verification
-│   - Social vouching system (2-user approval)
-│   - User profile management
-└─ Tasks:
-    - Build registration form (email, password, basic info)
-    - Implement email verification (SMTP)
-    - Create vouching system (pending approvals table)
-    - Build admin panel for vouching oversight
-
-#### [2.3] Two-Factor Authentication (2FA)
-├─ Duration: 2 days
-├─ Agent Vector: DEV
-├─ Dependencies: [2.2]
-├─ Deliverable:
-│   - TOTP-based 2FA (Google Authenticator compatible)
-│   - QR code generation for setup
-│   - Backup codes
-└─ Tasks:
-    - Integrate TOTP library (rotp gem for Rails)
-    - Generate QR codes for authenticator apps
-    - Implement backup code system
-    - Add 2FA enforcement option
-
-#### [2.4] Biometric Identity Verification ⚠️ CRITICAL PATH
-├─ Duration: 7 days
-├─ Agent Vector: DEV + SEC
-├─ Dependencies: [2.2]
-├─ Deliverable:
-│   - 2D facial recognition during signup
-│   - Liveness detection (blink, smile, turn head)
-│   - Face embedding storage (hashed, not raw images)
-│   - Duplicate detection system
-└─ Tasks:
-    - Integrate face-api.js for browser-based face detection
-    - Implement liveness challenges (random prompts)
-    - Generate face embeddings (128D vectors)
-    - Store embeddings with bcrypt hashing
-    - Build duplicate detection (cosine similarity threshold)
-    - **CRITICAL:** Ensure no raw biometric data leaves device
-
----
-
-### 🎯 MILESTONE 3: Cryptographic Voting Engine (Weeks 5-7)
-
-#### [3.1] Helios Integration Architecture ⚠️ CRITICAL PATH
-├─ Duration: 3 days
-├─ Agent Vector: ARCH + CRYPTO
-├─ Dependencies: [2.1]
-├─ Deliverable:
-│   - Integration design document
-│   - API specification (CONSUL ↔ Helios)
-│   - Data flow diagrams
-└─ Tasks:
-    - Design API bridge between CONSUL (Rails) and Helios (Django)
-    - Define vote lifecycle (creation → casting → tallying)
-    - Plan cryptographic key management
-    - Document security assumptions
-
-#### [3.2] Helios Deployment ⚠️ CRITICAL PATH
-├─ Duration: 4 days
-├─ Agent Vector: DEVOPS + CRYPTO
-├─ Dependencies: [3.1]
-├─ Deliverable:
-│   - Helios instance running on server
-│   - Election trustee setup
-│   - Test election conducted
-└─ Tasks:
-    - Deploy Helios on same VPS (separate container)
-    - Configure election trustees (key holders)
-    - Set up ElGamal encryption parameters
-    - Run test election with dummy votes
-
-#### [3.3] CONSUL-Helios API Bridge ⚠️ CRITICAL PATH
-├─ Duration: 5 days
-├─ Agent Vector: DEV
-├─ Dependencies: [3.2]
-├─ Deliverable:
-│   - RESTful API for vote operations
-│   - Authentication/authorization layer
-│   - Error handling and logging
-└─ Tasks:
-    - Build Rails API controller for Helios communication
-    - Implement vote casting endpoint
-    - Add vote verification endpoint
-    - Create tallying trigger mechanism
-    - Add comprehensive error handling
-
-#### [3.4] Voting UI Components ⚠️ CRITICAL PATH
-├─ Duration: 5 days
-├─ Agent Vector: UX + DEV
-├─ Dependencies: [3.3]
-├─ Deliverable:
-│   - Vote creation interface (admin)
-│   - Vote casting interface (user)
-│   - Vote verification interface
-│   - Results display
-└─ Tasks:
-    - Design voting UI (simple yes/no + multiple choice)
-    - Build vote creation form (admin panel)
-    - Create ballot interface (user-facing)
-    - Implement vote verification page (show encrypted vote + receipt)
-    - Build results dashboard with charts
-
-#### [3.5] Vote Privacy & Anonymization
-├─ Duration: 3 days
-├─ Agent Vector: CRYPTO + SEC
-├─ Dependencies: [3.4]
-├─ Deliverable:
-│   - Anonymization layer between identity and votes
-│   - Audit log (who voted, not how they voted)
-│   - Privacy policy documentation
-└─ Tasks:
-    - Implement blind signature or similar protocol
-    - Separate identity database from vote database
-    - Create audit log (timestamps, voter IDs, no vote content)
-    - Document privacy guarantees
-
----
-
-### 🎯 MILESTONE 4: Censorship Resistance (Weeks 6-8)
-
-#### [4.1] Tor Hidden Service Hardening
-├─ Duration: 2 days
-├─ Agent Vector: DEVOPS + SEC
-├─ Dependencies: [1.3]
-├─ Deliverable:
-│   - Hardened Tor configuration
-│   - .onion address published
-│   - Tor Browser compatibility tested
-└─ Tasks:
-    - Configure Tor hidden service with v3 onion address
-    - Harden Tor configuration (rate limiting, DoS protection)
-    - Test platform access via Tor Browser
-    - Create user guide for Tor access
-
-#### [4.2] Domain Fronting Setup
-├─ Duration: 3 days
-├─ Agent Vector: DEVOPS
-├─ Dependencies: [4.1]
-├─ Deliverable:
-│   - Cloudflare or Azure CDN configured
-│   - Domain fronting tested from Iran
-│   - Fallback domains registered
-└─ Tasks:
-    - Set up Cloudflare account with domain fronting
-    - Configure CDN to proxy requests to origin server
-    - Register multiple fallback domains
-    - Test access from Iran (via VPN simulation)
-
-#### [4.3] Content Delivery via IPFS (Optional)
-├─ Duration: 4 days
-├─ Agent Vector: DEVOPS
-├─ Dependencies: [4.2]
-├─ Deliverable:
-│   - IPFS node running
-│   - Static assets served via IPFS
-│   - IPFS gateway configured
-└─ Tasks:
-    - Install and configure IPFS node
-    - Upload static assets (CSS, JS, images) to IPFS
-    - Configure IPFS gateway
-    - Update platform to load assets from IPFS
-
-#### [4.4] VPN/Proxy Recommendations
-├─ Duration: 1 day
-├─ Agent Vector: SEC
-├─ Dependencies: [4.2]
-├─ Deliverable:
-│   - User guide for VPN/proxy setup
-│   - Recommended tools list (Psiphon, Lantern, Snowflake)
-└─ Tasks:
-    - Research censorship circumvention tools
-    - Create step-by-step guides (Persian + English)
-    - Test recommended tools from Iran (via VPN)
-
----
-
-### 🎯 MILESTONE 5: Security & Testing (Weeks 9-10)
-
-#### [5.1] Security Audit (Internal) ⚠️ CRITICAL PATH
-├─ Duration: 5 days
-├─ Agent Vector: SEC + ARCH
-├─ Dependencies: [3.5], [4.2]
-├─ Deliverable:
-│   - Security audit report
-│   - Vulnerability remediation plan
-│   - Penetration testing results
-└─ Tasks:
-    - Conduct code review for common vulnerabilities (OWASP Top 10)
-    - Test for SQL injection, XSS, CSRF
-    - Verify cryptographic implementation
-    - Check for information leakage
-    - Test authentication/authorization bypasses
-
-#### [5.2] Biometric Security Testing
-├─ Duration: 3 days
-├─ Agent Vector: SEC + DEV
-├─ Dependencies: [2.4]
-├─ Deliverable:
-│   - Biometric spoofing test results
-│   - Liveness detection effectiveness report
-│   - Recommendations for improvements
-└─ Tasks:
-    - Test face recognition with photos (should fail)
-    - Test face recognition with videos (should fail)
-    - Test face recognition with masks/disguises
-    - Verify liveness detection effectiveness
-    - Test duplicate detection accuracy
-
-#### [5.3] Load Testing
-├─ Duration: 2 days
-├─ Agent Vector: QA + DEVOPS
-├─ Dependencies: [3.4]
-├─ Deliverable:
-│   - Load testing report
-│   - Performance bottlenecks identified
-│   - Scaling recommendations
-└─ Tasks:
-    - Simulate 1,000 concurrent users
-    - Test vote casting under load
-    - Measure response times
-    - Identify database query bottlenecks
-    - Recommend caching strategies
-
-#### [5.4] End-to-End Testing ⚠️ CRITICAL PATH
-├─ Duration: 4 days
-├─ Agent Vector: QA + DEV
-├─ Dependencies: [5.1]
-├─ Deliverable:
-│   - Automated test suite
-│   - Test coverage report (>80%)
-│   - Bug tracking system
-└─ Tasks:
-    - Write integration tests (RSpec for Rails)
-    - Test complete user journeys (registration → voting → verification)
-    - Test edge cases and error conditions
-    - Set up continuous testing in CI/CD
-    - Document known issues and workarounds
-
----
-
-### 🎯 MILESTONE 6: Documentation & Launch Prep (Weeks 11-12)
-
-#### [6.1] User Documentation ⚠️ CRITICAL PATH
-├─ Duration: 3 days
-├─ Agent Vector: UX + DEV
-├─ Dependencies: [5.4]
-├─ Deliverable:
-│   - User guide (Persian + English)
-│   - Video tutorials
-│   - FAQ
-└─ Tasks:
-    - Write step-by-step user guide
-    - Create video tutorials (screen recordings)
-    - Build FAQ section
-    - Translate all documentation to Persian
-
-#### [6.2] Administrator Documentation
-├─ Duration: 2 days
-├─ Agent Vector: ARCH + DEV
-├─ Dependencies: [6.1]
-├─ Deliverable:
-│   - Admin manual
-│   - Deployment guide
-│   - Troubleshooting guide
-└─ Tasks:
-    - Document admin panel features
-    - Write deployment/upgrade procedures
-    - Create troubleshooting guide
-    - Document backup/recovery procedures
-
-#### [6.3] Security & Privacy Policy
-├─ Duration: 2 days
-├─ Agent Vector: SEC + ARCH
-├─ Dependencies: [5.1]
-├─ Deliverable:
-│   - Privacy policy
-│   - Security whitepaper
-│   - Threat model document
-└─ Tasks:
-    - Write privacy policy (what data is collected, how it's used)
-    - Create security whitepaper (cryptographic protocols)
-    - Document threat model and mitigations
-    - Publish transparency report template
-
-#### [6.4] Beta Testing Program ⚠️ CRITICAL PATH
-├─ Duration: 5 days
-├─ Agent Vector: ALL
-├─ Dependencies: [6.1]
-├─ Deliverable:
-│   - 50 beta users registered
-│   - 5 test votes conducted
-│   - Feedback collected and prioritized
-└─ Tasks:
-    - Recruit 50 beta testers (trusted community members)
-    - Conduct onboarding sessions
-    - Run 5 test votes (various types)
-    - Collect feedback via surveys
-    - Prioritize bug fixes and improvements
-
-#### [6.5] Launch Preparation ⚠️ CRITICAL PATH
-├─ Duration: 3 days
-├─ Agent Vector: ALL
-├─ Dependencies: [6.4]
-├─ Deliverable:
-│   - Production environment ready
-│   - Monitoring and alerting configured
-│   - Incident response plan
-│   - Launch announcement
-└─ Tasks:
-    - Finalize production configuration
-    - Set up monitoring (Grafana + Prometheus)
-    - Configure alerting (email/Telegram)
-    - Write incident response plan
-    - Prepare launch announcement (social media, forums)
-
----
-
-## Critical Path Analysis
-
-### Critical Path (10 weeks)
-```
-[1.1] → [1.2] → [1.3] → [1.4] → [2.1] → [2.2] → [2.4] → 
-[3.1] → [3.2] → [3.3] → [3.4] → [5.1] → [5.4] → [6.1] → [6.4] → [6.5]
+1.1 → 1.2 → 1.3 ─────────────────────────────┐
+         └→ 1.4 → 2.1 → 2.2 → 3.1 → 3.2 → 3.3 → 3.4
+                              ↑ (parallel from 1.3)
+4.1 (Tor hardening; parallel once 1.3 exists)
+→ 5.1 (after voting stack + 4.2 not required if EXTENDED cut)
+→ 5.4 → 6.1 → 6.4 → 6.5
 ```
 
-### Critical Path Duration: 10 weeks
-- Week 1: [1.1] + [1.2] + [1.3]
-- Week 2: [1.4] + [2.1]
-- Week 3: [2.2]
-- Week 4: [2.4]
-- Week 5: [3.1] + [3.2]
-- Week 6: [3.3]
-- Week 7: [3.4]
-- Week 9: [5.1]
-- Week 10: [5.4]
-- Week 11: [6.1]
-- Week 12: [6.4] + [6.5]
-
-### Parallel Work Streams
-- **Stream A (Critical):** Platform core + voting engine
-- **Stream B (Parallel):** Censorship resistance (Weeks 6-8)
-- **Stream C (Parallel):** Security testing (Weeks 9-10)
-
-### Slack Time (Non-Critical Tasks)
-- [2.3] 2FA: 2 days slack
-- [3.5] Privacy: 3 days slack
-- [4.1-4.4] Censorship resistance: Can run parallel to voting engine
-- [5.2-5.3] Testing: Can run parallel to security audit
-- [6.2-6.3] Documentation: Can run parallel to user docs
+**Note:** If you keep **3.5** or **5.1** strictly coupled, treat **3.5** as strongly recommended before declaring “vote privacy complete”; on the **tier** model it remains **EXTENDED** so teams can time-box MVP and add anonymization hardening immediately after first internal election.
 
 ---
 
-## Resource Allocation
+## Phase 1 — detailed packages (extensive)
 
-### Week-by-Week Breakdown
+### MILESTONE 1: Foundation & Setup (Weeks 1–2)
 
-**Weeks 1-2: Setup**
-- ARCH: 100% (leading setup)
-- DEV: 100% (infrastructure + fork)
-- DEVOPS: 50% (infrastructure)
+#### [1.1] Project Initialization — **CORE** ⚠️ critical path
+- Repo (private), dev environment, CI/CD, documentation structure.
 
-**Weeks 3-4: Platform Customization**
-- DEV: 100% (registration + biometrics)
-- UX: 50% (branding + localization)
-- SEC: 25% (biometric security review)
+#### [1.2] Technology Stack Selection — **CORE** ⚠️ critical path
+- CONSUL vs Decidim, Helios, biometric libraries, written rationale.
 
-**Weeks 5-7: Voting Engine**
-- CRYPTO: 100% (Helios integration)
-- DEV: 100% (API bridge + UI)
-- ARCH: 25% (architecture review)
+#### [1.3] Infrastructure Provisioning — **CORE** ⚠️ critical path
+- VPS (outside target jurisdiction), PostgreSQL, SSL, **Tor hidden service baseline**.
 
-**Weeks 6-8: Censorship Resistance (Parallel)**
-- DEVOPS: 100% (Tor + domain fronting + IPFS)
-- SEC: 25% (VPN recommendations)
-
-**Weeks 9-10: Security & Testing**
-- SEC: 100% (security audit)
-- QA: 100% (testing)
-- DEV: 50% (bug fixes)
-
-**Weeks 11-12: Documentation & Launch**
-- ALL: 100% (documentation + beta testing + launch)
+#### [1.4] CONSUL Platform Fork — **CORE** ⚠️ critical path
+- Fork, local instance, customization plan, tests green.
 
 ---
 
-## Dependencies Graph
+### MILESTONE 2: Core Platform Customization (Weeks 3–5)
+
+#### [2.1] CONSUL Branding & Localization — **CORE** ⚠️ critical path
+- Persian UI, RTL, theme, simplified navigation.
+
+#### [2.2] User Registration Module — **CORE** ⚠️ critical path
+- Email registration, verification, social vouching, admin oversight.
+
+#### [2.3] Two-Factor Authentication — **EXTENDED**
+- TOTP, QR setup, backup codes, optional enforcement.
+
+#### [2.4] Biometric Identity Verification — **EXTENDED** ⚠️ (full Phase 1 vision)
+- Browser-side biometrics, liveness, embeddings, duplicate detection, **no raw biometrics exfiltration**.
+
+---
+
+### MILESTONE 3: Cryptographic Voting Engine (Weeks 5–8)
+
+#### [3.1] Helios Integration Architecture — **CORE** ⚠️ critical path
+- Rails ↔ Helios bridge design, vote lifecycle, key-management plan.
+
+#### [3.2] Helios Deployment — **CORE** ⚠️ critical path
+- Deploy Helios, trustees, parameters, test election.
+
+#### [3.3] CONSUL–Helios API Bridge — **CORE** ⚠️ critical path
+- REST operations, auth, errors, logging.
+
+#### [3.4] Voting UI Components — **CORE** ⚠️ critical path
+- Admin ballot creation, casting UI, verification, results.
+
+#### [3.5] Vote Privacy & Anonymization — **EXTENDED**
+- Identity–vote separation, audit logs without ballot content, policy alignment.
+
+---
+
+### MILESTONE 4: Censorship Resistance (Weeks 6–8, parallel)
+
+#### [4.1] Tor Hidden Service Hardening — **CORE**
+- v3 onion, hardening, Tor Browser checks, user guide.
+
+#### [4.2] Domain Fronting Setup — **EXTENDED**
+- CDN / fronting experiments; validate empirically (availability varies by provider/region).
+
+#### [4.3] Content Delivery via IPFS — **EXTENDED**
+- Node, static assets, gateway — optional acceleration of censorship resistance.
+
+#### [4.4] VPN/Proxy Recommendations — **EXTENDED**
+- User-facing guides (Persian/English), tool list, safer defaults.
+
+---
+
+### MILESTONE 5: Security & Testing (Weeks 9–10)
+
+#### [5.1] Security Audit (Internal) — **CORE** ⚠️ critical path
+- OWASP-style review, crypto checks, authz/authn, leakage.
+
+#### [5.2] Biometric Security Testing — **EXTENDED**
+- Spoofing, liveness effectiveness, duplicate metrics.
+
+#### [5.3] Load Testing — **EXTENDED**
+- Concurrency, vote path, DB hotspots, caching notes.
+
+#### [5.4] End-to-End Testing — **CORE** ⚠️ critical path
+- Journeys registration → vote → verify; CI integration.
+
+---
+
+### MILESTONE 6: Documentation & Launch (Weeks 11–12)
+
+#### [6.1] User Documentation — **CORE** ⚠️ critical path
+- Guides, FAQ, tutorials (Persian + English).
+
+#### [6.2] Administrator Documentation — **EXTENDED**
+- Admin manual, deploy/upgrade, troubleshooting, backup/restore.
+
+#### [6.3] Security & Privacy Policy — **EXTENDED**
+- Privacy policy, security whitepaper draft, threat model, transparency template.
+
+#### [6.4] Beta Testing Program — **CORE** ⚠️ critical path
+- Testers, test votes, feedback loop.
+
+#### [6.5] Launch Preparation — **CORE** ⚠️ critical path
+- Production config, monitoring, incident response, announcement.
+
+---
+
+## Phases 2–4 — integrate later (same WBS, **LATER** tier)
+
+These were previously in an appendix; they are **part of the extensive main list** above. Summary intent:
+
+- **Phase 2 (7.x):** Decentralization and mobility — IPFS depth, on-chain audit trail, mesh exploration, offline sync, mobile clients.
+- **Phase 3 (8.x):** Advanced participation — stronger biometrics, richer voting methods, geo rules, advocacy features, DAO-style governance.
+- **Phase 4 (9.x):** Hardening at scale — custom chain / P2P, advanced crypto, **paid external audit**, 10k+ user scaling.
+
+Each **7.x–9.x** package should start only after **explicit go/no-go** from Phase 1 (security, legal, operational safety for organizers).
+
+---
+
+## Full dependency graph (extensive)
+
+**Legend (Mermaid):** red = CORE, orange = EXTENDED, gray dashed = LATER. Edges show **logical** predecessor relationships; parallel work (e.g. 4.x alongside 3.x) still branches from **1.3** / **2.1** as in your original plan.
 
 ```mermaid
-graph TD
-    A[1.1 Project Init] --> B[1.2 Tech Stack]
-    B --> C[1.3 Infrastructure]
-    B --> D[1.4 CONSUL Fork]
-    D --> E[2.1 Branding]
-    E --> F[2.2 Registration]
-    F --> G[2.3 2FA]
-    F --> H[2.4 Biometrics]
-    E --> I[3.1 Helios Architecture]
-    I --> J[3.2 Helios Deploy]
-    J --> K[3.3 API Bridge]
-    K --> L[3.4 Voting UI]
-    L --> M[3.5 Privacy]
-    C --> N[4.1 Tor Hardening]
-    N --> O[4.2 Domain Fronting]
-    O --> P[4.3 IPFS]
-    O --> Q[4.4 VPN Guide]
-    M --> R[5.1 Security Audit]
-    H --> S[5.2 Biometric Testing]
-    L --> T[5.3 Load Testing]
-    R --> U[5.4 E2E Testing]
-    U --> V[6.1 User Docs]
-    V --> W[6.2 Admin Docs]
-    R --> X[6.3 Security Policy]
-    V --> Y[6.4 Beta Testing]
-    Y --> Z[6.5 Launch]
-    
-    style A fill:#ff6b6b
-    style B fill:#ff6b6b
-    style C fill:#ff6b6b
-    style D fill:#ff6b6b
-    style E fill:#ff6b6b
-    style F fill:#ff6b6b
-    style H fill:#ff6b6b
-    style I fill:#ff6b6b
-    style J fill:#ff6b6b
-    style K fill:#ff6b6b
-    style L fill:#ff6b6b
-    style R fill:#ff6b6b
-    style U fill:#ff6b6b
-    style V fill:#ff6b6b
-    style Y fill:#ff6b6b
-    style Z fill:#ff6b6b
-```
+flowchart TB
+    subgraph CORE["CORE — MVP spine"]
+        n11["1.1 Init"]
+        n12["1.2 Stack"]
+        n13["1.3 Infra + Tor baseline"]
+        n14["1.4 Fork"]
+        n21["2.1 Branding"]
+        n22["2.2 Registration"]
+        n31["3.1 Helios arch"]
+        n32["3.2 Helios deploy"]
+        n33["3.3 API bridge"]
+        n34["3.4 Voting UI"]
+        n41["4.1 Tor harden"]
+        n51["5.1 Security audit"]
+        n54["5.4 E2E tests"]
+        n61["6.1 User docs"]
+        n64["6.4 Beta"]
+        n65["6.5 Launch"]
+    end
 
-**Legend:** Red nodes = Critical Path
+    subgraph EXT["EXTENDED — Phase 1 optional depth"]
+        n23["2.3 2FA"]
+        n24["2.4 Biometrics"]
+        n35["3.5 Anonymization"]
+        n42["4.2 Domain fronting"]
+        n43["4.3 IPFS"]
+        n44["4.4 VPN guides"]
+        n52["5.2 Bio test"]
+        n53["5.3 Load test"]
+        n62["6.2 Admin docs"]
+        n63["6.3 Policies"]
+    end
 
----
+    subgraph LAT["LATER — Phases 2–4"]
+        n71["7.1 IPFS deep"]
+        n72["7.2 Chain audit"]
+        n73["7.3 Mesh"]
+        n74["7.4 Offline vote"]
+        n75["7.5 Mobile"]
+        n81["8.1 Adv. bio"]
+        n82["8.2 Adv. voting"]
+        n83["8.3 Geo vote"]
+        n84["8.4 Advocacy"]
+        n85["8.5 DAO"]
+        n91["9.1 Custom chain"]
+        n92["9.2 P2P"]
+        n93["9.3 zk / advanced crypto"]
+        n94["9.4 External audit"]
+        n95["9.5 Scale 10k+"]
+    end
 
-## Risk Register
+    n11 --> n12 --> n13
+    n12 --> n14
+    n14 --> n21 --> n22
+    n21 --> n31 --> n32 --> n33 --> n34
+    n13 --> n41
+    n22 --> n23
+    n22 --> n24
+    n34 --> n35
+    n41 --> n42 --> n43
+    n42 --> n44
+    n35 --> n51
+    n24 --> n52
+    n34 --> n53
+    n51 --> n54
+    n61 --> n62
+    n51 --> n63
+    n54 --> n61 --> n64 --> n65
 
-### High-Priority Risks
+    n65 --> n71 --> n72 --> n73 --> n74 --> n75
+    n75 --> n81 --> n82 --> n83 --> n84 --> n85
+    n85 --> n91 --> n92 --> n93 --> n94 --> n95
 
-| Risk ID | Description | Probability | Impact | Mitigation | Owner |
-|---------|-------------|-------------|--------|------------|-------|
-| R1 | Helios integration more complex than expected | High | High | Allocate extra time; consider simpler crypto library | CRYPTO |
-| R2 | Biometric duplicate detection has false positives | Medium | High | Tune similarity threshold; manual review process | SEC |
-| R3 | Tor access blocked in Iran | Medium | Critical | Implement domain fronting; provide VPN guides | DEVOPS |
-| R4 | Team capacity insufficient (2 people) | High | High | Recruit volunteers; use AI assistance heavily | ARCH |
-| R5 | Budget overrun (hosting costs) | Medium | Medium | Use free tiers; optimize resource usage | DEVOPS |
-| R6 | Security vulnerability discovered post-launch | Medium | Critical | Bug bounty program; rapid response plan | SEC |
-| R7 | User adoption low (social vouching barrier) | Medium | High | Seed initial users; simplify vouching process | ALL |
-| R8 | Government targets platform/developers | Low | Critical | Anonymous development; decentralized hosting | ALL |
+    classDef core fill:#e03131,stroke:#1a1a1a,color:#fff
+    classDef ext fill:#fd7e14,stroke:#1a1a1a,color:#fff
+    classDef lat fill:#868e96,stroke:#1a1a1a,color:#fff,stroke-dasharray: 6 4
 
----
-
-## Budget Breakdown
-
-### Infrastructure (Monthly)
-- VPS (8GB RAM, 4 CPU): $20/month × 3 months = $60
-- Domain registration: $15/year
-- SSL certificates: $0 (Let's Encrypt)
-- Cloudflare Pro (optional): $20/month × 3 months = $60
-- **Total Infrastructure:** $135
-
-### Development Tools
-- GitHub (free for open source)
-- GitHub Copilot: $10/month × 3 months = $30
-- Design tools (Figma free tier): $0
-- **Total Tools:** $30
-
-### Services
-- Email (SendGrid free tier): $0
-- Monitoring (self-hosted): $0
-- **Total Services:** $0
-
-### Contingency
-- Bug bounty (post-launch): $500
-- Emergency hosting: $200
-- **Total Contingency:** $700
-
-### **TOTAL PHASE 1 BUDGET:** $865
-
-**Remaining budget for Phase 2+:** ~$49,000
-
----
-
-## Success Criteria
-
-### Phase 1 MVP (Week 12)
-- [ ] Platform accessible via Tor and domain fronting
-- [ ] 100 users registered with social vouching
-- [ ] 10 successful votes conducted (various types)
-- [ ] Zero vote tampering incidents
-- [ ] <5 second vote submission time
-- [ ] >80% test coverage
-- [ ] Security audit completed with no critical vulnerabilities
-- [ ] User documentation in Persian and English
-- [ ] Beta testing feedback incorporated
-
-### Technical Metrics
-- [ ] 99% uptime during beta period
-- [ ] <2 second page load time
-- [ ] <0.1% biometric false positive rate
-- [ ] 100% vote verifiability (users can check their encrypted votes)
-
-### Security Metrics
-- [ ] No successful attacks during beta
-- [ ] No biometric data leakage
-- [ ] No vote-identity linkage possible
-- [ ] Tor access functional from Iran
-
----
-
-## Phase 2+ Roadmap (Weeks 13-24)
-
-### Phase 2: Decentralization (Weeks 13-18)
-- [7.1] IPFS full integration (content + metadata)
-- [7.2] Blockchain audit trail (Ethereum or Hyperledger)
-- [7.3] Mesh networking (Briar/Scuttlebutt integration)
-- [7.4] Offline voting with sync
-- [7.5] Mobile apps (React Native)
-
-### Phase 3: Advanced Features (Weeks 19-30)
-- [8.1] 3D facial recognition + voice biometrics
-- [8.2] Advanced voting methods (ranked choice, quadratic, liquid democracy)
-- [8.3] Geo-restricted voting
-- [8.4] Live advocacy (dynamic representatives)
-- [8.5] DAO governance implementation
-
-### Phase 4: Scale & Hardening (Weeks 31-52)
-- [9.1] Custom blockchain (Tendermint or Substrate)
-- [9.2] Full P2P architecture (no central server)
-- [9.3] Advanced cryptographic protocols (zk-SNARKs)
-- [9.4] External security audit (professional firm)
-- [9.5] Scale to 10,000+ users
-
----
-
-## Gantt Chart (Phase 1)
-
-```
-Week  | 1  | 2  | 3  | 4  | 5  | 6  | 7  | 8  | 9  | 10 | 11 | 12 |
-------|----|----|----|----|----|----|----|----|----|----|----|----|
-1.1   |█   |    |    |    |    |    |    |    |    |    |    |    |
-1.2   |█   |    |    |    |    |    |    |    |    |    |    |    |
-1.3   | █  |    |    |    |    |    |    |    |    |    |    |    |
-1.4   | █  |    |    |    |    |    |    |    |    |    |    |    |
-2.1   |  █ |    |    |    |    |    |    |    |    |    |    |    |
-2.2   |    |█   |    |    |    |    |    |    |    |    |    |    |
-2.3   |    | █  |    |    |    |    |    |    |    |    |    |    |
-2.4   |    |  █ |█   |    |    |    |    |    |    |    |    |    |
-3.1   |    |    |    |█   |    |    |    |    |    |    |    |    |
-3.2   |    |    |    | █  |    |    |    |    |    |    |    |    |
-3.3   |    |    |    |  █ |█   |    |    |    |    |    |    |    |
-3.4   |    |    |    |    | █  |█   |    |    |    |    |    |    |
-3.5   |    |    |    |    |    | █  |    |    |    |    |    |    |
-4.1   |    |    |    |    |    |█   |    |    |    |    |    |    |
-4.2   |    |    |    |    |    | █  |    |    |    |    |    |    |
-4.3   |    |    |    |    |    |  █ |█   |    |    |    |    |    |
-4.4   |    |    |    |    |    |    | █  |    |    |    |    |    |
-5.1   |    |    |    |    |    |    |    |█   |█   |    |    |    |
-5.2   |    |    |    |    |    |    |    | █  |    |    |    |    |
-5.3   |    |    |    |    |    |    |    |  █ |    |    |    |    |
-5.4   |    |    |    |    |    |    |    |    | █  |█   |    |    |
-6.1   |    |    |    |    |    |    |    |    |    | █  |    |    |
-6.2   |    |    |    |    |    |    |    |    |    |  █ |    |    |
-6.3   |    |    |    |    |    |    |    |    |    |  █ |    |    |
-6.4   |    |    |    |    |    |    |    |    |    |    |█   |█   |
-6.5   |    |    |    |    |    |    |    |    |    |    |    | █  |
-
-█ = Critical Path
-█ = Non-Critical Path
+    class n11,n12,n13,n14,n21,n22,n31,n32,n33,n34,n41,n51,n54,n61,n64,n65 core
+    class n23,n24,n35,n42,n43,n44,n52,n53,n62,n63 ext
+    class n71,n72,n73,n74,n75,n81,n82,n83,n84,n85,n91,n92,n93,n94,n95 lat
 ```
 
 ---
 
-## Next Steps
+## Critical path (full Phase 1 vision — includes EXTENDED where marked critical in planning)
 
-1. **Review WBS with team** - Validate timeline and resource allocation
-2. **Set up project management** - Use GitHub Projects or Trello
-3. **Begin Week 1 tasks** - Start with [1.1] Project Initialization
-4. **Weekly standups** - Review progress, adjust timeline as needed
-5. **Risk monitoring** - Track risks and update mitigation strategies
+If you execute **all** Phase 1 packages on the **original** aggressive schedule, the **longest chain** still runs through **biometrics** and **Helios**. For **CORE-only** planning, **drop 2.4, 3.5, 4.2–4.4, 5.2–5.3, 6.2–6.3** from the critical narrative and adjust staffing accordingly.
+
+**Original-style critical sequence (reference):**  
+`1.1 → 1.2 → 1.3 → 1.4 → 2.1 → 2.2 → 2.4 → 3.1 → 3.2 → 3.3 → 3.4 → 5.1 → 5.4 → 6.1 → 6.4 → 6.5`
 
 ---
 
-## Conclusion
+## Parallel work streams
 
-This WBS provides a realistic 12-week path to a working MVP. The critical path is 10 weeks, with 2 weeks of buffer for unexpected delays. Success requires:
+| Stream | Contents |
+|--------|-----------|
+| **A — Platform + voting** | 1.x → 2.x → 3.x (CORE + selected EXTENDED) |
+| **B — Censorship** | 4.x from 1.3 onward |
+| **C — Assurance** | 5.x after voting features exist |
+| **D — Post-MVP** | 7.x → 9.x after 6.5 |
 
-1. **Disciplined scope management** - No feature creep
-2. **Parallel work streams** - Maximize team efficiency
-3. **Heavy use of existing tools** - Don't reinvent the wheel
-4. **AI-assisted development** - Leverage Copilot, ChatGPT, Claude
-5. **Community engagement** - Recruit volunteers for non-critical tasks
+---
 
-**The platform will be functional, secure, and censorship-resistant - but not feature-complete. Phases 2-4 add advanced capabilities over the following 9 months.**
+## Risk register (unchanged priorities; tie to tiers)
 
-Ready to begin implementation?
+| ID | Risk | Tier link |
+|----|------|-----------|
+| R1 | Helios integration harder than estimate | CORE — buffer or cut EXTENDED first |
+| R2 | Biometric false positives/negatives | EXTENDED — tune or delay 2.4 |
+| R3 | Tor blocked | CORE mitigation + EXTENDED 4.2/4.4 |
+| R4 | 2-person team capacity | Cut EXTENDED, defer LATER |
+| R5 | Hosting cost | DEVOPS — LATER scale drives cost |
+| R6 | Post-launch vuln | CORE IR plan; **LATER** 9.4 external audit |
+| R7 | Low adoption (vouching) | CORE product + comms |
+| R8 | Targeting of operators | CORE opsec; **LATER** 9.2 decentralization |
+
+---
+
+## Budget note
+
+Infrastructure line items can stay low for Phase 1; **labor** dominates. Treat **\<$50K** as **total envelope** including stipends, infra, tools, and **reserve for 9.4** if you commit to an external audit later. The register does not replace finance tracking.
+
+---
+
+## Success criteria (tier-aware)
+
+**CORE MVP gate**
+
+- [ ] Platform reachable via **Tor** (baseline from 1.3 / 4.1)
+- [ ] Registration + **at least one** end-to-end **verifiable** vote flow (Helios path)
+- [ ] Internal security review complete; **no unresolved criticals** you self-assign
+- [ ] E2E tests cover main journey; documentation for users (Persian + English)
+- [ ] Beta completed; launch checklist executed
+
+**EXTENDED additions (full Phase 1 vision)**
+
+- [ ] 2FA; biometrics per spec; 3.5 anonymization; optional IPFS/fronting/guides; deeper tests; admin + policy set
+
+**LATER (roadmap)**
+
+- [ ] Items in **7.x–9.x** per community capacity and safety review
+
+---
+
+## Next steps
+
+1. Use **master register** for backlog and issue mapping.  
+2. In the dashboard, enable **dimming** to steer standups on **CORE**.  
+3. When deferring an **EXTENDED** package, **edit dependencies** in `project-dashboard-web/data.js` so no CORE task waits on dimmed work.  
+4. Revisit **LATER** packages after **6.5** retrospective.
+
+---
+
+*This file supersedes the previous “short WBS + appendix” split: the **extensive list is primary**; **tiers** replace hiding later work in a separate section.*

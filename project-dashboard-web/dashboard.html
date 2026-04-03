@@ -7,6 +7,13 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+    <div class="integration-toolbar">
+        <label class="dim-toggle">
+            <input type="checkbox" id="dimIntegrationTiers" checked onchange="applyIntegrationDimming()">
+            <span>Highlight MVP <strong>core</strong> (dim Phase 1 extended + post-MVP roadmap)</span>
+        </label>
+        <span class="integration-hint">Matches <code>Work-Breakdown-Structure.md</code> tiers: core / extended / later.</span>
+    </div>
     <div class="tabs">
         <button class="tab active" onclick="switchTab('status')">📊 Status & Checklist</button>
         <button class="tab" onclick="switchTab('network')">🔗 Network Graph</button>
@@ -103,6 +110,9 @@
                         <option value="4">M4: Censorship</option>
                         <option value="5">M5: Security</option>
                         <option value="6">M6: Launch</option>
+                        <option value="7">M7: Decentralization (later)</option>
+                        <option value="8">M8: Advanced (later)</option>
+                        <option value="9">M9: Scale (later)</option>
                     </select>
                 </div>
                 <div class="control-group">
@@ -133,7 +143,11 @@
                 <div class="legend-item"><div class="legend-color" style="background:#4facfe"></div><span>M4: Censorship</span></div>
                 <div class="legend-item"><div class="legend-color" style="background:#43e97b"></div><span>M5: Security</span></div>
                 <div class="legend-item"><div class="legend-color" style="background:#f5576c"></div><span>M6: Launch</span></div>
-                <div class="legend-item" style="margin-top:10px"><div style="width:30px;height:2px;background:#667eea;margin-right:10px"></div><span>Direct</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#6c757d"></div><span>M7: Decentralization</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#495057"></div><span>M8: Advanced</span></div>
+                <div class="legend-item"><div class="legend-color" style="background:#343a40"></div><span>M9: Scale</span></div>
+                <div class="legend-item" style="margin-top:10px;font-size:11px;opacity:0.9"><span>🔴 core · 🟠 extended · ⚪ later (see WBS)</span></div>
+                <div class="legend-item" style="margin-top:6px"><div style="width:30px;height:2px;background:#667eea;margin-right:10px"></div><span>Direct</span></div>
                 <div class="legend-item"><div style="width:30px;height:0;border-top:2px dashed #f0883e;margin-right:10px"></div><span>Indirect</span></div>
             </div>
             <div id="graph-info" style="display:none;position:absolute;bottom:20px;right:20px;background:rgba(10,14,39,.95);padding:16px;border-radius:12px;box-shadow:0 8px 32px rgba(0,0,0,.5);z-index:1000;max-width:380px;max-height:60vh;overflow-y:auto;font-size:12px;line-height:1.5">

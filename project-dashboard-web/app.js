@@ -4,6 +4,38 @@ let currentTab = 'status';
 let svg, simulation, link, node, tooltip;
 let graphData = { nodes: [], links: [] };
 
+function taskIntegrationTier(t) {
+    if (typeof PARENT_INTEGRATION_TIER === 'undefined') return 'core';
+    return PARENT_INTEGRATION_TIER[t.parent] || 'core';
+}
+
+function applyIntegrationDimming() {
+    const el = document.getElementById('dimIntegrationTiers');
+    const on = el && el.checked;
+    document.body.classList.toggle('dim-integration-tiers', !!on);
+    if (gNode && gLink) filterGraph();
+    else applyGraphIntegrationDimming();
+}
+
+function applyGraphIntegrationDimming() {
+    const on = document.getElementById('dimIntegrationTiers') && document.getElementById('dimIntegrationTiers').checked;
+    if (!gNode || !gLink) return;
+    if (!on) {
+        gNode.attr('opacity', 1);
+        gLink.attr('opacity', 0.5).attr('stroke', '#667eea').attr('stroke-width', 1.5).attr('marker-end', 'url(#a-direct)');
+        return;
+    }
+    gNode.attr('opacity', d => (d.tier === 'core' ? 1 : d.tier === 'extended' ? 0.3 : 0.14));
+    gLink.attr('opacity', l => {
+        const sid = l.source.id || l.source, tid = l.target.id || l.target;
+        const s = gNodeMap.get(sid), t = gNodeMap.get(tid);
+        if (!s || !t) return 0.06;
+        if (s.tier === 'core' && t.tier === 'core') return 0.55;
+        if (s.tier !== 'core' && t.tier !== 'core') return 0.05;
+        return 0.22;
+    }).attr('stroke', '#667eea').attr('stroke-width', 1.5).attr('marker-end', 'url(#a-direct)');
+}
+
 // Tab Switching
 function switchTab(tab) {
     currentTab = tab;
@@ -22,10 +54,19 @@ function switchTab(tab) {
 // Initialize on load
 document.addEventListener('DOMContentLoaded', () => {
     const saved = localStorage.getItem('projectStatus');
-    projectData = saved ? JSON.parse(saved) : JSON.parse(JSON.stringify(PROJECT_DATA));
+    const fresh = JSON.parse(JSON.stringify(PROJECT_DATA));
+    if (saved) {
+        try {
+            const parsed = JSON.parse(saved);
+            projectData = parsed.milestones && parsed.milestones.length >= fresh.milestones.length ? parsed : fresh;
+        } catch {
+            projectData = fresh;
+        }
+    } else projectData = fresh;
     renderMilestones();
     updateStats();
     updateProjection();
+    applyIntegrationDimming();
 });
 
 // ===== STATUS VIEW FUNCTIONS =====
@@ -38,8 +79,10 @@ function renderMilestones() {
                 <div>${m.tasks.length} tasks</div>
             </div>
             <div class="milestone-content">
-                ${m.tasks.map(t => `
-                    <div class="task ${t.status.replace('-','')} ${t.critical?'critical':''}" data-task-id="${t.id}" data-milestone="${m.id}" data-ai="${t.aiCapability||3}">
+                ${m.tasks.map(t => {
+                    const tier = taskIntegrationTier(t);
+                    return `
+                    <div class="task ${t.status.replace('-','')} ${t.critical?'critical':''} task-tier-${tier}" data-task-id="${t.id}" data-milestone="${m.id}" data-ai="${t.aiCapability||3}" data-tier="${tier}">
                         <input type="checkbox" ${t.status==='completed'?'checked':''} onchange="toggleTask('${t.id}',${m.id})">
                         <div class="task-id">${t.id}</div>
                         <div class="task-name">${t.name}</div>
@@ -51,7 +94,7 @@ function renderMilestones() {
                             <option value="in-progress" ${t.status==='in-progress'?'selected':''}>In Progress</option>
                             <option value="completed" ${t.status==='completed'?'selected':''}>Completed</option>
                         </select>
-                    </div>`).join('')}
+                    </div>`;}).join('')}
             </div>
         </div>`).join('');
 }
@@ -272,9 +315,10 @@ let gNodeMap=new Map(), gIndLinkG, gLink, gNode;
 function initGraph() {
     graphData.nodes=[];graphData.links=[];gNodeMap.clear();
     projectData.milestones.forEach(m=>{m.tasks.forEach(t=>{
+        const tier = taskIntegrationTier(t);
         const n={id:t.id,name:t.name,agent:t.agent,hours:t.hours,milestone:m.id,
             milestoneName:m.name,color:m.color,critical:t.critical,status:t.status,
-            parent:t.parent,dependencies:t.dependencies||[]};
+            parent:t.parent,dependencies:t.dependencies||[],tier};
         graphData.nodes.push(n);gNodeMap.set(t.id,n);
     })});
     // Direct links from dependencies
@@ -312,7 +356,7 @@ function renderGraph() {
         .force('link',d3.forceLink(directLinks).id(d=>d.id).distance(90).strength(0.4))
         .force('charge',d3.forceManyBody().strength(-280))
         .force('center',d3.forceCenter(W/2,H/2))
-        .force('x',d3.forceX(d=>(d.milestone-1)*W/6+W/12).strength(0.12))
+        .force('x',d3.forceX(d=>(d.milestone-1)*W/9+W/18).strength(0.1))
         .force('y',d3.forceY(H/2).strength(0.05))
         .force('collision',d3.forceCollide(22)).alphaDecay(0.02);
 
@@ -343,9 +387,14 @@ function renderGraph() {
     // Hover: highlight ancestors/descendants
     gNode.on('mouseenter',(ev,d)=>{
         const anc=getAnc(d.id),desc=getDesc(d.id),rel=new Set([d.id,...anc,...desc]);
-        gNode.attr('opacity',n=>rel.has(n.id)?1:0.12);
-        gLink.attr('opacity',l=>{const s=l.source.id||l.source,t=l.target.id||l.target;return rel.has(s)&&rel.has(t)?0.8:0.04});
-    }).on('mouseleave',()=>{gNode.attr('opacity',1);gLink.attr('opacity',0.5)});
+        const dim=document.getElementById('dimIntegrationTiers')&&document.getElementById('dimIntegrationTiers').checked;
+        gNode.attr('opacity',n=>{
+            if(rel.has(n.id))return 1;
+            if(dim)return n.tier==='core'?0.14:0.06;
+            return 0.12;
+        });
+        gLink.attr('opacity',l=>{const s=l.source.id||l.source,t=l.target.id||l.target;return rel.has(s)&&rel.has(t)?0.85:0.04});
+    }).on('mouseleave',()=>{applyGraphIntegrationDimming();});
 
     // Click: info panel
     gNode.on('click',(ev,d)=>{ev.stopPropagation();showNodeInfo(d)});
@@ -357,6 +406,7 @@ function renderGraph() {
         gIndLinkG.selectAll('line').attr('x1',d=>d.source.x).attr('y1',d=>d.source.y).attr('x2',d=>d.target.x).attr('y2',d=>d.target.y);
         gNode.attr('transform',d=>`translate(${d.x},${d.y})`);
     });
+    applyGraphIntegrationDimming();
 }
 
 // Ancestors/descendants
@@ -395,6 +445,7 @@ function showNodeInfo(d){
         <div style="margin:3px 0"><span style="color:#aaa">Milestone:</span> ${d.milestone} — ${d.milestoneName}</div>
         <div style="margin:3px 0"><span style="color:#aaa">Parent:</span> [${d.parent}]</div>
         <div style="margin:3px 0"><span style="color:#aaa">Agent:</span> ${d.agent} | <span style="color:#aaa">Hours:</span> ${d.hours}h</div>
+        <div style="margin:3px 0"><span style="color:#aaa">Integration:</span> ${d.tier} (core = MVP spine)</div>
         <div style="margin:3px 0"><span style="color:#aaa">Status:</span> ${d.status} | <span style="color:#aaa">Critical:</span> ${d.critical?'Yes':'No'}</div>
         <hr style="border-color:#333;margin:6px 0">
         <div><span style="color:#aaa">Predecessors (${parents.length}):</span><br>${inR||'<i style="color:#666">None (start node)</i>'}</div>
@@ -446,8 +497,9 @@ function highlightCrit(id){
 
 function closeInfo(){
     document.getElementById('graph-info').style.display='none';
-    if(gNode){gNode.attr('opacity',1);gNode.select('circle').attr('stroke','#0d1117').attr('stroke-width',1.5)}
-    if(gLink){gLink.attr('opacity',0.5).attr('stroke','#667eea').attr('stroke-width',1.5).attr('marker-end','url(#a-direct)')}
+    if(gNode){gNode.select('circle').attr('stroke','#0d1117').attr('stroke-width',1.5)}
+    if(gNode&&gLink)filterGraph();
+    else applyGraphIntegrationDimming();
 }
 
 function toggleIndirectLinks(){
@@ -458,8 +510,17 @@ function toggleIndirectLinks(){
 function searchGraph(){
     const q=document.getElementById('graphSearch').value.toLowerCase();
     if(!gNode)return;
-    gNode.attr('opacity',d=>(!q||d.id.toLowerCase().includes(q)||d.name.toLowerCase().includes(q))?1:0.12);
-    if(!q&&gLink)gLink.attr('opacity',0.5);
+    if(!q){if(gLink)filterGraph();else applyGraphIntegrationDimming();return;}
+    gNode.attr('opacity',d=>{
+        const hit=!q||d.id.toLowerCase().includes(q)||d.name.toLowerCase().includes(q);
+        return hit?1:0.08;
+    });
+    if(gLink)gLink.attr('opacity',l=>{
+        const s=l.source.id||l.source,t=l.target.id||l.target;
+        const sn=gNodeMap.get(s),tn=gNodeMap.get(t);
+        const hit=(id)=>!q||id.toLowerCase().includes(q)||(gNodeMap.get(id)?.name||'').toLowerCase().includes(q);
+        return hit(s)&&hit(t)?0.65:0.05;
+    });
 }
 
 function filterGraph(){
@@ -467,20 +528,32 @@ function filterGraph(){
     const ms=document.getElementById('milestoneFilter').value;
     const ag=document.getElementById('agentFilter').value;
     const cr=document.getElementById('showCritical').checked;
+    const dim=document.getElementById('dimIntegrationTiers')&&document.getElementById('dimIntegrationTiers').checked;
+    function dimNodeOpacity(d, visible){
+        if(!visible)return 0.06;
+        if(!dim)return 1;
+        if(d.tier==='core')return 1;
+        if(d.tier==='extended')return 0.28;
+        return 0.12;
+    }
     gNode.attr('opacity',d=>{
         let ok=true;
         if(ms!=='all'&&d.milestone!==parseInt(ms))ok=false;
         if(ag!=='all'&&!d.agent.includes(ag))ok=false;
         if(cr&&!d.critical)ok=false;
-        return ok?1:0.08;
+        return dimNodeOpacity(d,ok);
     });
     gLink.attr('opacity',l=>{
         const sn=gNodeMap.get(l.source.id||l.source),tn=gNodeMap.get(l.target.id||l.target);
-        if(!sn||!tn)return 0.05;
+        if(!sn||!tn)return 0.04;
         let ok=true;
         if(ms!=='all'&&sn.milestone!==parseInt(ms)&&tn.milestone!==parseInt(ms))ok=false;
         if(ag!=='all'&&!sn.agent.includes(ag)&&!tn.agent.includes(ag))ok=false;
         if(cr&&!sn.critical&&!tn.critical)ok=false;
-        return ok?0.5:0.03;
+        if(!ok)return 0.03;
+        if(!dim)return 0.5;
+        if(sn.tier==='core'&&tn.tier==='core')return 0.52;
+        if(sn.tier!=='core'&&tn.tier!=='core')return 0.06;
+        return 0.2;
     });
 }

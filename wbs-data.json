@@ -3,8 +3,9 @@
     "name": "Digital Democracy Platform",
     "start_date": "2026-03-10",
     "duration_weeks": 12,
-    "total_hours": 2370,
-    "total_tasks": 115
+    "total_hours": 5250,
+    "total_tasks": 41,
+    "duration_weeks_note": "Phase 1 = 12 weeks; 7.x\u20139.x are post-MVP roadmap (week numbers are ordinal planning slots)."
   },
   "tasks": [
     {
@@ -19,7 +20,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 18,
       "Status": "Not Started",
-      "Milestone_Order": 1
+      "Milestone_Order": 1,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "1. Foundation & Setup",
@@ -33,7 +35,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 26,
       "Status": "Not Started",
-      "Milestone_Order": 1
+      "Milestone_Order": 1,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "1. Foundation & Setup",
@@ -47,7 +50,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 28,
       "Status": "Not Started",
-      "Milestone_Order": 1
+      "Milestone_Order": 1,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "1. Foundation & Setup",
@@ -61,7 +65,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 22,
       "Status": "Not Started",
-      "Milestone_Order": 1
+      "Milestone_Order": 1,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "2. Platform Customization",
@@ -75,7 +80,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 28,
       "Status": "Not Started",
-      "Milestone_Order": 2
+      "Milestone_Order": 2,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "2. Platform Customization",
@@ -89,7 +95,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 48,
       "Status": "Not Started",
-      "Milestone_Order": 2
+      "Milestone_Order": 2,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "2. Platform Customization",
@@ -103,7 +110,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 22,
       "Status": "Not Started",
-      "Milestone_Order": 2
+      "Milestone_Order": 2,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "2. Platform Customization",
@@ -117,7 +125,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 60,
       "Status": "Not Started",
-      "Milestone_Order": 2
+      "Milestone_Order": 2,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "3. Cryptographic Voting",
@@ -131,7 +140,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 34,
       "Status": "Not Started",
-      "Milestone_Order": 3
+      "Milestone_Order": 3,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "3. Cryptographic Voting",
@@ -145,7 +155,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 38,
       "Status": "Not Started",
-      "Milestone_Order": 3
+      "Milestone_Order": 3,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "3. Cryptographic Voting",
@@ -159,7 +170,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 52,
       "Status": "Not Started",
-      "Milestone_Order": 3
+      "Milestone_Order": 3,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "3. Cryptographic Voting",
@@ -173,7 +185,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 52,
       "Status": "Not Started",
-      "Milestone_Order": 3
+      "Milestone_Order": 3,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "3. Cryptographic Voting",
@@ -187,7 +200,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 32,
       "Status": "Not Started",
-      "Milestone_Order": 3
+      "Milestone_Order": 3,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "4. Censorship Resistance",
@@ -201,7 +215,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 22,
       "Status": "Not Started",
-      "Milestone_Order": 4
+      "Milestone_Order": 4,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "4. Censorship Resistance",
@@ -215,7 +230,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 28,
       "Status": "Not Started",
-      "Milestone_Order": 4
+      "Milestone_Order": 4,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "4. Censorship Resistance",
@@ -229,7 +245,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 38,
       "Status": "Not Started",
-      "Milestone_Order": 4
+      "Milestone_Order": 4,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "4. Censorship Resistance",
@@ -243,7 +260,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 18,
       "Status": "Not Started",
-      "Milestone_Order": 4
+      "Milestone_Order": 4,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "5. Security & Testing",
@@ -257,7 +275,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 54,
       "Status": "Not Started",
-      "Milestone_Order": 5
+      "Milestone_Order": 5,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "5. Security & Testing",
@@ -271,7 +290,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 32,
       "Status": "Not Started",
-      "Milestone_Order": 5
+      "Milestone_Order": 5,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "5. Security & Testing",
@@ -285,7 +305,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 24,
       "Status": "Not Started",
-      "Milestone_Order": 5
+      "Milestone_Order": 5,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "5. Security & Testing",
@@ -299,7 +320,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 40,
       "Status": "Not Started",
-      "Milestone_Order": 5
+      "Milestone_Order": 5,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "6. Documentation & Launch",
@@ -313,7 +335,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 34,
       "Status": "Not Started",
-      "Milestone_Order": 6
+      "Milestone_Order": 6,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "6. Documentation & Launch",
@@ -327,7 +350,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 30,
       "Status": "Not Started",
-      "Milestone_Order": 6
+      "Milestone_Order": 6,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "6. Documentation & Launch",
@@ -341,7 +365,8 @@
       "Critical_Path": "No",
       "Estimated_Hours": 28,
       "Status": "Not Started",
-      "Milestone_Order": 6
+      "Milestone_Order": 6,
+      "Integration_Tier": "extended"
     },
     {
       "Milestone": "6. Documentation & Launch",
@@ -355,7 +380,8 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 50,
       "Status": "Not Started",
-      "Milestone_Order": 6
+      "Milestone_Order": 6,
+      "Integration_Tier": "core"
     },
     {
       "Milestone": "6. Documentation & Launch",
@@ -369,7 +395,233 @@
       "Critical_Path": "Yes",
       "Estimated_Hours": 32,
       "Status": "Not Started",
-      "Milestone_Order": 6
+      "Milestone_Order": 6,
+      "Integration_Tier": "core"
+    },
+    {
+      "Milestone": "7. Decentralization & mobility",
+      "Task_ID": "7.1",
+      "Task_Name": "IPFS full integration (content + metadata)",
+      "Week_Start": 13,
+      "Week_End": 14,
+      "Start_Date": "2026-06-09",
+      "End_Date": "2026-06-16",
+      "Agent_Vector": "DEVOPS+DEV",
+      "Critical_Path": "No",
+      "Estimated_Hours": 120,
+      "Status": "Not Started",
+      "Milestone_Order": 7,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "7. Decentralization & mobility",
+      "Task_ID": "7.2",
+      "Task_Name": "Blockchain audit trail",
+      "Week_Start": 14,
+      "Week_End": 15,
+      "Start_Date": "2026-06-23",
+      "End_Date": "2026-06-30",
+      "Agent_Vector": "CRYPTO+DEV",
+      "Critical_Path": "No",
+      "Estimated_Hours": 140,
+      "Status": "Not Started",
+      "Milestone_Order": 7,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "7. Decentralization & mobility",
+      "Task_ID": "7.3",
+      "Task_Name": "Mesh networking (Briar / Scuttlebutt)",
+      "Week_Start": 15,
+      "Week_End": 16,
+      "Start_Date": "2026-07-07",
+      "End_Date": "2026-07-14",
+      "Agent_Vector": "ARCH+DEV",
+      "Critical_Path": "No",
+      "Estimated_Hours": 160,
+      "Status": "Not Started",
+      "Milestone_Order": 7,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "7. Decentralization & mobility",
+      "Task_ID": "7.4",
+      "Task_Name": "Offline voting with sync",
+      "Week_Start": 16,
+      "Week_End": 17,
+      "Start_Date": "2026-07-21",
+      "End_Date": "2026-07-28",
+      "Agent_Vector": "CRYPTO+DEV",
+      "Critical_Path": "No",
+      "Estimated_Hours": 180,
+      "Status": "Not Started",
+      "Milestone_Order": 7,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "7. Decentralization & mobility",
+      "Task_ID": "7.5",
+      "Task_Name": "Mobile apps (React Native)",
+      "Week_Start": 17,
+      "Week_End": 18,
+      "Start_Date": "2026-08-04",
+      "End_Date": "2026-08-11",
+      "Agent_Vector": "DEV+UX",
+      "Critical_Path": "No",
+      "Estimated_Hours": 200,
+      "Status": "Not Started",
+      "Milestone_Order": 7,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "8. Advanced participation",
+      "Task_ID": "8.1",
+      "Task_Name": "3D facial + voice biometrics",
+      "Week_Start": 19,
+      "Week_End": 20,
+      "Start_Date": "2026-08-18",
+      "End_Date": "2026-08-25",
+      "Agent_Vector": "DEV+SEC",
+      "Critical_Path": "No",
+      "Estimated_Hours": 120,
+      "Status": "Not Started",
+      "Milestone_Order": 8,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "8. Advanced participation",
+      "Task_ID": "8.2",
+      "Task_Name": "Advanced voting methods (RCV, QV, liquid)",
+      "Week_Start": 20,
+      "Week_End": 21,
+      "Start_Date": "2026-09-01",
+      "End_Date": "2026-09-08",
+      "Agent_Vector": "ARCH+DEV",
+      "Critical_Path": "No",
+      "Estimated_Hours": 140,
+      "Status": "Not Started",
+      "Milestone_Order": 8,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "8. Advanced participation",
+      "Task_ID": "8.3",
+      "Task_Name": "Geo-restricted voting",
+      "Week_Start": 21,
+      "Week_End": 22,
+      "Start_Date": "2026-09-15",
+      "End_Date": "2026-09-22",
+      "Agent_Vector": "DEV+SEC",
+      "Critical_Path": "No",
+      "Estimated_Hours": 100,
+      "Status": "Not Started",
+      "Milestone_Order": 8,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "8. Advanced participation",
+      "Task_ID": "8.4",
+      "Task_Name": "Live advocacy / dynamic representatives",
+      "Week_Start": 22,
+      "Week_End": 23,
+      "Start_Date": "2026-09-29",
+      "End_Date": "2026-10-06",
+      "Agent_Vector": "DEV+UX",
+      "Critical_Path": "No",
+      "Estimated_Hours": 120,
+      "Status": "Not Started",
+      "Milestone_Order": 8,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "8. Advanced participation",
+      "Task_ID": "8.5",
+      "Task_Name": "DAO governance implementation",
+      "Week_Start": 23,
+      "Week_End": 24,
+      "Start_Date": "2026-10-13",
+      "End_Date": "2026-10-20",
+      "Agent_Vector": "ARCH+CRYPTO",
+      "Critical_Path": "No",
+      "Estimated_Hours": 160,
+      "Status": "Not Started",
+      "Milestone_Order": 8,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "9. Scale & hardening",
+      "Task_ID": "9.1",
+      "Task_Name": "Custom blockchain (Tendermint / Substrate)",
+      "Week_Start": 25,
+      "Week_End": 28,
+      "Start_Date": "2026-10-27",
+      "End_Date": "2026-11-17",
+      "Agent_Vector": "CRYPTO+DEV",
+      "Critical_Path": "No",
+      "Estimated_Hours": 320,
+      "Status": "Not Started",
+      "Milestone_Order": 9,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "9. Scale & hardening",
+      "Task_ID": "9.2",
+      "Task_Name": "Full P2P architecture",
+      "Week_Start": 28,
+      "Week_End": 32,
+      "Start_Date": "2026-11-10",
+      "End_Date": "2026-12-08",
+      "Agent_Vector": "ARCH+DEV",
+      "Critical_Path": "No",
+      "Estimated_Hours": 400,
+      "Status": "Not Started",
+      "Milestone_Order": 9,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "9. Scale & hardening",
+      "Task_ID": "9.3",
+      "Task_Name": "Advanced crypto (e.g. zk-SNARKs)",
+      "Week_Start": 32,
+      "Week_End": 36,
+      "Start_Date": "2026-11-24",
+      "End_Date": "2026-12-22",
+      "Agent_Vector": "CRYPTO",
+      "Critical_Path": "No",
+      "Estimated_Hours": 360,
+      "Status": "Not Started",
+      "Milestone_Order": 9,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "9. Scale & hardening",
+      "Task_ID": "9.4",
+      "Task_Name": "External security audit (professional)",
+      "Week_Start": 36,
+      "Week_End": 38,
+      "Start_Date": "2026-12-08",
+      "End_Date": "2026-12-22",
+      "Agent_Vector": "SEC+ALL",
+      "Critical_Path": "No",
+      "Estimated_Hours": 80,
+      "Status": "Not Started",
+      "Milestone_Order": 9,
+      "Integration_Tier": "later"
+    },
+    {
+      "Milestone": "9. Scale & hardening",
+      "Task_ID": "9.5",
+      "Task_Name": "Scale to 10,000+ users",
+      "Week_Start": 38,
+      "Week_End": 40,
+      "Start_Date": "2026-12-22",
+      "End_Date": "2027-01-05",
+      "Agent_Vector": "DEVOPS+DEV",
+      "Critical_Path": "No",
+      "Estimated_Hours": 280,
+      "Status": "Not Started",
+      "Milestone_Order": 9,
+      "Integration_Tier": "later"
     }
   ],
   "agents": [

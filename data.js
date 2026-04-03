@@ -1,4 +1,4 @@
-// Complete Project Data with All 380+ Subtasks
+// Project data: Phase 1 subtasks + milestones 7–9 (post-MVP roadmap nodes)
 const PROJECT_DATA = {
     startDate: "2026-03-10",
     milestones: [
@@ -1414,7 +1414,7 @@ const PROJECT_DATA = {
                     critical: true,
                     status: "not-started",
                     aiCapability: 4,
-                    dependencies: ["4.3.5", "5.4.4", "6.4.5"]
+                    dependencies: ["4.1.4", "5.4.4", "6.4.5"]
                 },
                 {
                     id: "6.5.2",
@@ -1477,6 +1477,58 @@ const PROJECT_DATA = {
                     dependencies: ["6.5.5"]
                 }
             ]
+        },
+        {
+            id: 7,
+            name: "Decentralization & mobility (integrate later)",
+            weeks: "13+",
+            color: "#6c757d",
+            tasks: [
+                { id: "7.1.1", name: "IPFS — full content + metadata integration", agent: "DEVOPS + DEV", hours: 120, parent: "7.1", milestone: 7, critical: false, status: "not-started", aiCapability: 3, dependencies: ["6.5.6"] },
+                { id: "7.2.1", name: "Blockchain audit trail", agent: "CRYPTO + DEV", hours: 140, parent: "7.2", milestone: 7, critical: false, status: "not-started", aiCapability: 2, dependencies: ["7.1.1"] },
+                { id: "7.3.1", name: "Mesh networking (Briar / Scuttlebutt)", agent: "ARCH + DEV", hours: 160, parent: "7.3", milestone: 7, critical: false, status: "not-started", aiCapability: 2, dependencies: ["7.2.1"] },
+                { id: "7.4.1", name: "Offline voting with sync", agent: "CRYPTO + DEV", hours: 180, parent: "7.4", milestone: 7, critical: false, status: "not-started", aiCapability: 2, dependencies: ["7.3.1"] },
+                { id: "7.5.1", name: "Mobile apps (React Native)", agent: "DEV + UX", hours: 200, parent: "7.5", milestone: 7, critical: false, status: "not-started", aiCapability: 3, dependencies: ["7.4.1"] }
+            ]
+        },
+        {
+            id: 8,
+            name: "Advanced participation (integrate later)",
+            weeks: "19+",
+            color: "#495057",
+            tasks: [
+                { id: "8.1.1", name: "3D facial + voice biometrics", agent: "DEV + SEC", hours: 120, parent: "8.1", milestone: 8, critical: false, status: "not-started", aiCapability: 2, dependencies: ["7.5.1"] },
+                { id: "8.2.1", name: "Advanced voting (RCV, QV, liquid democracy)", agent: "ARCH + DEV", hours: 140, parent: "8.2", milestone: 8, critical: false, status: "not-started", aiCapability: 3, dependencies: ["8.1.1"] },
+                { id: "8.3.1", name: "Geo-restricted voting", agent: "DEV + SEC", hours: 100, parent: "8.3", milestone: 8, critical: false, status: "not-started", aiCapability: 3, dependencies: ["8.2.1"] },
+                { id: "8.4.1", name: "Live advocacy / dynamic representatives", agent: "DEV + UX", hours: 120, parent: "8.4", milestone: 8, critical: false, status: "not-started", aiCapability: 3, dependencies: ["8.3.1"] },
+                { id: "8.5.1", name: "DAO governance implementation", agent: "ARCH + CRYPTO", hours: 160, parent: "8.5", milestone: 8, critical: false, status: "not-started", aiCapability: 2, dependencies: ["8.4.1"] }
+            ]
+        },
+        {
+            id: 9,
+            name: "Scale & hardening (integrate later)",
+            weeks: "31+",
+            color: "#343a40",
+            tasks: [
+                { id: "9.1.1", name: "Custom blockchain (Tendermint / Substrate)", agent: "CRYPTO + DEV", hours: 320, parent: "9.1", milestone: 9, critical: false, status: "not-started", aiCapability: 2, dependencies: ["8.5.1"] },
+                { id: "9.2.1", name: "Full P2P architecture (no central server)", agent: "ARCH + DEV", hours: 400, parent: "9.2", milestone: 9, critical: false, status: "not-started", aiCapability: 2, dependencies: ["9.1.1"] },
+                { id: "9.3.1", name: "Advanced cryptography (e.g. zk-SNARKs)", agent: "CRYPTO", hours: 360, parent: "9.3", milestone: 9, critical: false, status: "not-started", aiCapability: 1, dependencies: ["9.2.1"] },
+                { id: "9.4.1", name: "External security audit (professional firm)", agent: "SEC + ALL", hours: 80, parent: "9.4", milestone: 9, critical: false, status: "not-started", aiCapability: 2, dependencies: ["9.3.1"] },
+                { id: "9.5.1", name: "Scale to 10,000+ users", agent: "DEVOPS + DEV", hours: 280, parent: "9.5", milestone: 9, critical: false, status: "not-started", aiCapability: 3, dependencies: ["9.4.1"] }
+            ]
         }
     ]
+};
+
+/** Parent work-package tier: core = MVP spine; extended = Phase 1 optional; later = post-MVP (dimmed by default in UI). */
+const PARENT_INTEGRATION_TIER = {
+    "1.1": "core", "1.2": "core", "1.3": "core", "1.4": "core",
+    "2.1": "core", "2.2": "core", "2.3": "extended", "2.4": "extended",
+    "3.1": "core", "3.2": "core", "3.3": "core", "3.4": "core", "3.5": "extended",
+    "4.1": "core", "4.2": "extended", "4.3": "extended", "4.4": "extended",
+    "5.1": "core", "5.2": "extended", "5.3": "extended", "5.4": "core",
+    "6.1": "core", "6.2": "extended", "6.3": "extended", "6.4": "core", "6.5": "core",
+    "7.1": "later", "7.2": "later", "7.3": "later", "7.4": "later", "7.5": "later",
+    "8.1": "later", "8.2": "later", "8.3": "later", "8.4": "later", "8.5": "later",
+    "9.1": "later", "9.2": "later", "9.3": "later", "9.4": "later", "9.5": "later"
 };
